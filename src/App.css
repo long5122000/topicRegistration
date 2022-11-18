@@ -1,0 +1,59 @@
+thead {
+  background-color: #dadada;
+}
+th,
+td {
+  vertical-align: middle;
+  white-space: nowrap;
+  text-align: center;
+  border: 1px solid rgb(29, 29, 29);
+}
+th {
+  padding: 20px 30px;
+  font-weight: 600;
+  /* text-align: left; */
+}
+td {
+  padding: 15px 30px;
+}
+.react-tabs__tab-list {
+  border-bottom: unset !important;
+}
+.react-tabs__tab {
+  border: unset !important;
+}
+.swiper-button-next,
+.swiper-button-prev {
+  height: 50px !important;
+  width: 50px !important;
+  border-radius: 1000rem;
+  background: rgb(197, 197, 197);
+  color: white;
+}
+.swiper-button-next:after,
+.swiper-button-prev:after {
+  font-size: 30px !important;
+  color: white;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background: #16bcdc;
+}
+.swiper-button-next {
+  right: 0 !important;
+}
+.swiper-button-prev {
+  left: 0 !important;
+}
+.swiper {
+  position: unset;
+  padding: 30px !important;
+}
+.relationship {
+  overflow: unset;
+  position: relative;
+}
+.relationship-swiper {
+  padding: 40px;
+}
