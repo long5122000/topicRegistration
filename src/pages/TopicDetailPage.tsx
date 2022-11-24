@@ -34,6 +34,7 @@ const TopicDetailPage = () => {
   });
   const [params] = useSearchParams();
   const topicId: any = params.get("id");
+
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -54,22 +55,25 @@ const TopicDetailPage = () => {
       await addDoc(collection(db, "RegisterTopic"), {
         name: userInfo.fullname,
         email: userInfo.email,
-        date: userInfo.password,
+        date: userInfo.date,
         class: userInfo.class,
+        authEmail: data.authEmail,
         status: "1",
         cv: userInfo.cv,
+        topicName: data.name,
+        topicId: topicId,
         createdAt: serverTimestamp(),
       });
-      toast.success(`Create new user with email: ${data.name} successfully!`);
+      toast.success(`Đã gửi đăng đăng ký đề tài:  ${data.name} successfully!`);
     } catch (error) {
       console.log(error);
-      toast.error("Update user failed!");
+      toast.error("Đăng ký đề tài lỗi!");
       console.log(error);
     }
   };
   return (
     <div>
-      <Heading>Đề tài : Xây dựng web site bán đồ điện tử</Heading>
+      <Heading>Đề tài :{data.name}</Heading>
 
       <div className="container bg-[#f7ecec] p-6 mt-5 rounded-lg">
         <div className="flex mt-10 gap-x-5 border-b-2 border-gray-400 py-3">

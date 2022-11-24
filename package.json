@@ -17,6 +17,7 @@
     "react-date-picker": "^9.0.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.34.2",
+    "react-modal": "^3.16.1",
     "react-pdf": "^6.0.3",
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.3.0",

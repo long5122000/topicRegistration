@@ -1,4 +1,4 @@
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ActionDelete from "../components/actions/ActionDelete";
@@ -7,14 +7,17 @@ import ActionView from "../components/actions/ActionView";
 import Button from "../components/button/Button";
 import LabelStatus from "../components/label/LabelStatus";
 import Table from "../components/table/Table";
+import { useAuth } from "../context/auth-context";
 import { db } from "../firebase-app/firebase-config";
 
 const BrowserTopicPage = () => {
   const [topicList, setTopicList] = useState([]);
   const navigate = useNavigate();
+  const { userInfo } = useAuth();
   useEffect(() => {
     const colRef = collection(db, "RegisterTopic");
-    onSnapshot(colRef, (snapshot) => {
+    const q = query(colRef, where("authEmail", "==", userInfo.email));
+    onSnapshot(q, (snapshot) => {
       const result: any = [];
       snapshot.forEach((doc) => {
         result.push({
@@ -54,8 +57,9 @@ const BrowserTopicPage = () => {
 
   const renderPlanItem = (topic: any) => (
     <tr key={topic.id}>
-      <td title={topic.id}>{topic.id.slice(0, 5) + "..."}</td>
+      <td title={topic?.topicName}>{topic?.topicName}</td>
       <td>{topic?.name}</td>
+      <td>{topic?.class}</td>
       <td>
         {new Date(topic?.createdAt?.seconds * 1000).toLocaleDateString("vi-VI")}
       </td>
@@ -63,7 +67,7 @@ const BrowserTopicPage = () => {
       <td>
         <div className="flex items-center gap-x-3 text-gray-500">
           <ActionView
-            onClick={() => navigate(`/ProposedTopicView?id=${topic.id}`)}
+            onClick={() => navigate(`/BrowserTopicView?id=${topic.id}`)}
           ></ActionView>
 
           <ActionEdit onClick={() => handleViewTopic(topic)}></ActionEdit>
@@ -85,8 +89,9 @@ const BrowserTopicPage = () => {
       <Table>
         <thead>
           <tr>
-            <th>Id</th>
-            <th>Tên </th>
+            <th>Tên đề tài</th>
+            <th>Tên sinh viên </th>
+            <th>Lớp</th>
             <th>Ngày tạo</th>
             <th>Trạng thái </th>
             <th>Actions</th>

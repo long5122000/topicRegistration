@@ -40,7 +40,14 @@ import ProposedTopicUpdate from "./modules/topic/ProposedTopicUpdate";
 import Sample from "./Sample";
 import MyInfoPage from "./pages/MyInfoPage";
 import BrowserTopicPage from "./pages/BrowserTopicPage";
+import BrowserTopicView from "./modules/topic/BrowserTopicView";
+import Modal from "react-modal";
+const customStyles = {
+  content: {},
+};
 
+Modal.setAppElement("#root");
+Modal.defaultStyles = {};
 function App() {
   return (
     <div>
@@ -83,6 +90,14 @@ function App() {
               path="/BrowseTopics"
               element={<BrowserTopicPage></BrowserTopicPage>}
             ></Route>
+            <Route
+              path="/BrowserTopicView"
+              element={<BrowserTopicView></BrowserTopicView>}
+            ></Route>
+            {/* <Route
+              path="/BrowserTopicEdit"
+              element={<BrowserTopicEdit></BrowserTopicEdit>}
+            ></Route> */}
           </Route>
           <Route element={<DashBoardLayout></DashBoardLayout>}>
             <Route
