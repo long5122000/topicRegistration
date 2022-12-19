@@ -42,8 +42,21 @@ import MyInfoPage from "./pages/MyInfoPage";
 import BrowserTopicPage from "./pages/BrowserTopicPage";
 import BrowserTopicView from "./modules/topic/BrowserTopicView";
 import Modal from "react-modal";
+import ProgressReportsPage from "./pages/ProgressReportsPage";
+import AppointmentAddNew from "./modules/appointment/AppointmentAddNew";
+import AppointmentDetailPage from "./pages/AppointmentDetailPage";
+import AppointmentListLecturer from "./modules/appointment/AppointmentListLecturer";
+import AppointmentView from "./modules/appointment/AppointmentView";
+
 const customStyles = {
-  content: {},
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+  },
 };
 
 Modal.setAppElement("#root");
@@ -94,10 +107,26 @@ function App() {
               path="/BrowserTopicView"
               element={<BrowserTopicView></BrowserTopicView>}
             ></Route>
-            {/* <Route
-              path="/BrowserTopicEdit"
-              element={<BrowserTopicEdit></BrowserTopicEdit>}
-            ></Route> */}
+            <Route
+              path="/ProgressReports"
+              element={<ProgressReportsPage></ProgressReportsPage>}
+            ></Route>
+            <Route
+              path="/AppointmentAddNew"
+              element={<AppointmentAddNew></AppointmentAddNew>}
+            ></Route>
+            <Route
+              path="/AppointmentListLecturer"
+              element={<AppointmentListLecturer></AppointmentListLecturer>}
+            ></Route>
+            <Route
+              path="/AppointmentDetail"
+              element={<AppointmentDetailPage></AppointmentDetailPage>}
+            ></Route>
+            <Route
+              path="/AppointmentView"
+              element={<AppointmentView></AppointmentView>}
+            ></Route>
           </Route>
           <Route element={<DashBoardLayout></DashBoardLayout>}>
             <Route

@@ -40,8 +40,6 @@ const ProposedTopic = () => {
     getTopicData();
   }, [userInfo]);
 
-  console.log(topicList);
-
   const renderUserStatus = (status: any) => {
     switch (status) {
       case "1":

@@ -47,14 +47,14 @@ const RegisterTopic = () => {
         .transform((value) => (isNaN(value) ? undefined : value))
         .nullable()
         .required("Vui lòng nhập số lượng sinh viên")
-        .when("plan", (category, schema) => {
+        .when("category", (category, schema) => {
           return category === "1"
             ? schema
                 .min(1, "Số lượng sinh viên không được nhỏ hơn 1")
-                .max(3, "Số lượng sinh viên không được lớn hơn 3")
+                .max(1, "Số lượng sinh viên không được lớn hơn 1")
             : schema
                 .min(1, "Số lượng sinh viên không được nhỏ hơn 1")
-                .max(1, "Số lượng sinh viên không được lớn hơn 1");
+                .max(3, "Số lượng sinh viên không được lớn hơn 3");
         }),
       category: yup.string().required(),
     })
@@ -100,6 +100,8 @@ const RegisterTopic = () => {
     }
     getData();
   }, [userInfo]);
+  console.log(planList);
+
   const handleClickOptionPlan = async (item) => {
     const colRef = doc(db, "Plans", item.id);
     const docData = await getDoc(colRef);
@@ -109,6 +111,7 @@ const RegisterTopic = () => {
     });
     setSelectPlan(item);
   };
+  console.log(selectPlan);
 
   const handleAddNew = async (values: {}) => {
     if (!isValid) return;
@@ -119,6 +122,7 @@ const RegisterTopic = () => {
         name: values.name,
         status: values.status,
         plan: selectPlan.name,
+        planId: selectPlan.id,
         category: values.category,
         quantity: values.quantity,
         desc: content,

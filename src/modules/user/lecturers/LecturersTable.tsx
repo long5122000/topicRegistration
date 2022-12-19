@@ -70,14 +70,8 @@ const LecturersTable = () => {
         );
       case "2":
         return (
-          <LabelStatus className="" type="warning">
-            Chưa giải quyết
-          </LabelStatus>
-        );
-      case "3":
-        return (
           <LabelStatus className="" type="danger">
-            Bị cấm
+            Không hoạt động
           </LabelStatus>
         );
 
@@ -111,13 +105,13 @@ const LecturersTable = () => {
 
   const renderUserItem = (user: any) => (
     <tr key={user.id}>
-      <td title={user.id}>{user.id.slice(0, 5) + "..."}</td>
+      <td title={user.mgv}>{user.mgv}</td>
       <td>{user?.fullname}</td>
       <td title={user?.email}>{user?.email.slice(0, 10) + "..."}</td>
       <td title={user?.password}>{user?.password}</td>
       <td title={user?.section}>{user?.section}</td>
       <td title={user?.gender}>{renderStudentGender(user?.gender)}</td>
-      <td>{user?.date}</td>
+      <td>{user?.phone}</td>
       <td>{renderUserStatus(user?.status)}</td>
       <td>
         <div className="flex items-center gap-x-3 text-gray-500">

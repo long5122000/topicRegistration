@@ -24,12 +24,27 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { db } from "../../firebase-app/firebase-config";
+import { auth, db } from "../../firebase-app/firebase-config";
 import Button from "../../components/button/Button";
+import DatePicker from "react-datepicker";
+import dayjs from "dayjs";
+import "react-datepicker/dist/react-datepicker.css";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 const PlanAddNew = () => {
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  // function formatDateVN(dateString) {
+  //   var subDateStr = dateString.split("/");
+  //   return new Date(+subDateStr[2], subDateStr[1] - 1, +subDateStr[0]);
+  // }
+  // console.log(formatDateVN(startDate));
+  console.log(dayjs(startDate).format("YYYY"));
+
   const [students, setStudents] = useState([]);
   const [lecturers, setLecturers] = useState();
   const [userList, setUserList] = useState<any>([]);
+  const [topicList, setTopicList] = useState<any>([]);
+  const [planList, setPlanList] = useState<any>([]);
   const PlanId = uid();
   const [data, setData] = useState<any>([]);
   const schema = yup.object({
@@ -69,25 +84,64 @@ const PlanAddNew = () => {
   console.log("data", data);
   useEffect(() => {
     async function getData() {
-      data.forEach(async (item: any) => {
-        const colRef = collection(db, "Users");
-        const q = query(colRef, where("email", "==", item.Email));
-        const querySnapshot = await getDocs(q);
+      const colRef = collection(db, "Users");
+      const q = query(
+        colRef,
+        where("role", "==", "2"),
+        where("status", "==", "1")
+      );
+      const querySnapshot = await getDocs(q);
 
-        let result: any = [];
-        querySnapshot.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          result.push({
-            id: doc.id,
-            ...doc.data(),
-          });
+      let result: any = [];
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        result.push({
+          id: doc.id,
+          ...doc.data(),
         });
-        setUserList((userList: any) => [...userList, ...result]);
       });
+      setUserList(result);
     }
     getData();
-  }, [data]);
+  }, []);
   console.log(userList);
+  useEffect(() => {
+    async function getData() {
+      const colRef = collection(db, "Topics");
+      const q = query(colRef, where("planId", "!=", PlanId));
+      const querySnapshot = await getDocs(q);
+
+      let result: any = [];
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        result.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+      setTopicList(result);
+    }
+    getData();
+  }, []);
+  console.log("t", topicList);
+  useEffect(() => {
+    async function getData() {
+      const colRef = collection(db, "Plans");
+      const q = query(colRef, where("status", "==", true));
+      const querySnapshot = await getDocs(q);
+
+      let result: any = [];
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        result.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+      setPlanList(result);
+    }
+    getData();
+  }, []);
 
   const watchStatus = watch("status");
   const tData: any = [...data1, ...data2];
@@ -102,7 +156,24 @@ const PlanAddNew = () => {
   // useEffect(() => {
 
   // }, [pres]);
-
+  const renderStudentCategory = (status: any) => {
+    switch (status) {
+      case 1:
+        return (
+          <LabelStatus className="" type="success">
+            Khóa luận tốt nghiệp
+          </LabelStatus>
+        );
+      case 2:
+        return (
+          <LabelStatus className="" type="warning">
+            Thực tập chuyên ngành
+          </LabelStatus>
+        );
+      default:
+        break;
+    }
+  };
   const handleAddNewPlan = async (values: values): Promise<void> => {
     if (!isValid) return;
     try {
@@ -112,11 +183,51 @@ const PlanAddNew = () => {
           PlanId: PlanId,
         });
       });
+      topicList.forEach(async (item) => {
+        const docRef = doc(db, "Topics", item.id);
+        await updateDoc(docRef, {
+          status: "1",
+        });
+      });
+      planList.forEach(async (item) => {
+        const docRef = doc(db, "Plans", item.id);
+        await updateDoc(docRef, {
+          status: false,
+        });
+      });
+      data.forEach(async (item) => {
+        await addDoc(collection(db, "Users"), {
+          fullname: item.Name,
+          email: item.Email,
+          password: item.Password,
+          class: item.Classes,
+          gender: String(item.Gender),
+          date: item.Date,
+          PlanId: PlanId,
+          status: String(item.Status),
+          role: "1",
+          createdAt: serverTimestamp(),
+          avatar: "",
+          category: String(item.Category),
+          msv: item.msv,
+        });
+        await createUserWithEmailAndPassword(
+          auth,
+          item?.Email ?? "",
+          item?.Password ?? ""
+        );
+      });
+
       await addDoc(collection(db, "Plans"), {
         IdPlan: PlanId,
-        name: values.name,
+        name:
+          values.name +
+          " " +
+          dayjs(startDate).format("YYYY") +
+          " " +
+          dayjs(endDate).format("YYYY"),
         status: values.status,
-        users: userList,
+        users: data,
         createdAt: serverTimestamp(),
       });
 
@@ -147,11 +258,34 @@ const PlanAddNew = () => {
             <p className="text-[#de3131] text-sm">{errors.name?.message}</p>
           </Field>
           <Field>
-            <Label>Trạng thái </Label>
-            <Toggle
-              on={watchStatus === true}
-              onClick={() => setValue("status", !watchStatus)}
-            ></Toggle>
+            <Label>Năm học</Label>
+            <div className="flex gap-x-5">
+              {" "}
+              <DatePicker
+                selected={startDate}
+                selectsStart
+                startDate={startDate}
+                endDate={endDate}
+                maxDate={startDate}
+                value={startDate}
+                showYearPicker
+                dateFormat="yyyy"
+                minDate={startDate}
+              />
+              _
+              <DatePicker
+                selected={endDate}
+                onChange={(date) => setEndDate(date)}
+                value={endDate}
+                selectsEnd
+                startDate={startDate}
+                endDate={endDate}
+                minDate={startDate}
+                maxDate={endDate.setFullYear(startDate.getFullYear() + 1)}
+                showYearPicker
+                dateFormat="yyyy"
+              />
+            </div>
           </Field>
         </div>
         <div className="form-layout container">
@@ -168,54 +302,37 @@ const PlanAddNew = () => {
               ></ExcelUpload>
             </div>
           </Field>
-        </div>
-        <div className="form-layout container">
           <Field>
-            <Label>Giảng viên</Label>
-            <Table>
-              <thead>
-                <tr>
-                  <th>Họ tên</th>
-                  <th>Bộ môn</th>
-                  <th>Email</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data1 &&
-                  data1.map((pres) => (
-                    <tr>
-                      <td>{pres.Name}</td>
-                      <td>{pres?.Section}</td>
-                      <td>{pres?.Email}</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </Table>
+            <Label>Trạng thái </Label>
+            <Toggle
+              on={watchStatus === true}
+              onClick={() => setValue("status", !watchStatus)}
+            ></Toggle>
           </Field>
         </div>
-        <div className="form-layout container">
-          <Field>
-            <Label>Sinh viên</Label>
-            <Table>
-              <thead>
-                <tr>
-                  <th>Họ tên</th>
-                  <th>Mã Sv</th>
-                  <th>Lớp</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data2 &&
-                  data2.map((pres) => (
-                    <tr>
-                      <td>{pres.Name}</td>
-                      <td>{pres?.Email}</td>
-                      <td>{pres?.Classes}</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </Table>
-          </Field>
+        <div className=" container">
+          <Label>Sinh viên</Label>
+          <Table>
+            <thead>
+              <tr>
+                <th>Mã Sv</th>
+                <th>Họ tên</th>
+                <th>Lớp</th>
+                <th>Thể loại đăng ký</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data1 &&
+                data1.map((pres) => (
+                  <tr>
+                    <td>{pres?.Msv}</td>
+                    <td>{pres.Name}</td>
+                    <td>{pres?.Classes}</td>
+                    <td>{renderStudentCategory(pres?.Category)}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </Table>
         </div>
         <Button
           kind="primary"

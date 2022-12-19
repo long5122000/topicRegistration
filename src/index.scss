@@ -68,6 +68,12 @@ body {
   .react-calendar__tile--now:hover {
     @apply bg-secondary text-white rounded-lg;
   }
+  // .react-datepicker-wrapper {
+  //   @apply flex;
+  // }
+  .react-datepicker__input-container {
+    @apply border border-gray-200 rounded-lg p-2;
+  }
 }
 .quill {
   @apply border border-strock rounded-xl;

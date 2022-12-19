@@ -43,6 +43,7 @@ const MyInfoPage = () => {
       .required("Vui lòng nhập email"),
     password: yup.string().required("Vui lòng nhập mật khẩu"),
     class: yup.string().required("Vui lòng nhập họ và tên"),
+    phone: yup.number().required("Vui lòng nhập số điện thoại"),
   });
   const {
     control,
@@ -68,7 +69,7 @@ const MyInfoPage = () => {
   const watchStatus = watch("status");
   const watchGender = watch("gender");
   const imageUrl = getValues("avatar");
-
+  const fileUrl = getValues("cv");
   const imageRegex: any = /%2F(\S+)\?/gm.exec(imageUrl);
   const imageName: any = imageRegex?.length > 0 ? imageRegex[1] : "";
 
@@ -93,6 +94,8 @@ const MyInfoPage = () => {
     status?: string;
     role?: string;
     avatar?: string;
+    cv?: string;
+    phone: string;
   }
   const handleUpdateUser = async (values: values): Promise<void> => {
     if (!isValid) return;
@@ -108,8 +111,8 @@ const MyInfoPage = () => {
         date: new Date(startDate).toLocaleDateString(),
         avatar: image,
         cv: file,
-        status: values.status,
-        role: "2",
+        phone: "0" + String(values.phone),
+
         createdAt: serverTimestamp(),
       });
       toast.success("Update user information successfully!");
@@ -132,18 +135,10 @@ const MyInfoPage = () => {
   useEffect(() => {
     setImage(imageUrl);
   }, [imageUrl, setImage]);
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     if (!userId) return;
-  //     const colRef = doc(db, "Users", userId);
-  //     const docData = await getDoc(colRef);
-  //     const dt: any = docData.data();
-  //     setData(dt);
-  //     reset(docData && docData.data());
-  //     console.log(docData.data());
-  //   }
-  //   fetchData();
-  // }, [userId, reset]);
+  useEffect(() => {
+    setFile(fileUrl);
+  }, [fileUrl, setFile]);
+
   useEffect(() => {
     async function getData() {
       const colRef = collection(db, "Users");
@@ -230,33 +225,13 @@ const MyInfoPage = () => {
           </div>
           <div className="form-layout container">
             <Field>
-              <Label>Trạng thái</Label>
-              <div className="flex flex-wrap gap-x-5">
-                <Radio
-                  name="status"
-                  control={control}
-                  checked={watchStatus === "1"}
-                  value={"1"}
-                >
-                  Hoạt động
-                </Radio>
-                <Radio
-                  name="status"
-                  control={control}
-                  checked={watchStatus === "2"}
-                  value={"2"}
-                >
-                  Chưa giải quyết
-                </Radio>
-                <Radio
-                  name="status"
-                  control={control}
-                  checked={watchStatus === "3"}
-                  value={"3"}
-                >
-                  Bị cấm
-                </Radio>
-              </div>
+              <Label>Điện thoại</Label>
+              <Input
+                name="phone"
+                placeholder="Nhập số điện thoại"
+                control={control}
+              ></Input>
+              <p className="text-[#de3131] text-sm">{errors.phone?.message}</p>
             </Field>
             <Field>
               <Label>Lớp</Label>
@@ -297,7 +272,7 @@ const MyInfoPage = () => {
             isLoading={isSubmitting}
             disabled={isSubmitting}
           >
-            Sửa sinh viên
+            Cập nhập thông tin
           </Button>
         </form>
       </div>

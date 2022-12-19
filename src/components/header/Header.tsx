@@ -29,6 +29,8 @@ const menu: { id: number; name: string; url: string }[] = [
 ];
 const Header = () => {
   const { userInfo } = useAuth();
+  console.log(userInfo);
+
   return (
     <>
       <div className="bg-[#032C4A]">
@@ -80,30 +82,74 @@ const Header = () => {
                 />
               </svg>
               <div className="absolute w-[150px] right-0 top-full bg-white shadow-md py-3 divide-y divide-gray-300 divide-dashed rounded-xl z-10 transitioz-10 invisible group-hover:visible">
+                {userInfo?.role === "1" ? (
+                  ""
+                ) : (
+                  <Link
+                    to={`/dashboard`}
+                    className="flex items-center px-1 py-3 hover:bg-gray-100 transition"
+                  >
+                    <p className="ml-3 text-gray-600 text-sm font-medium">
+                      Quản trị
+                    </p>
+                  </Link>
+                )}
                 <Link
-                  to={`/dashboard`}
+                  to={`/myInfo`}
                   className="flex items-center px-1 py-3 hover:bg-gray-100 transition"
                 >
                   <p className="ml-3 text-gray-600 text-sm font-medium">
-                    Quản trị
+                    Thông tin cá nhân
                   </p>
                 </Link>
-                <Link
-                  to={`/ProposedTopic`}
-                  className="flex items-center px-1 py-3 hover:bg-gray-100 transition"
-                >
-                  <p className="ml-3 text-gray-600 text-sm font-medium">
-                    Đề tài đề xuất
-                  </p>
-                </Link>
-                <Link
-                  to={`/BrowseTopics`}
-                  className="flex items-center px-1 py-3 hover:bg-gray-100 transition"
-                >
-                  <p className="ml-3 text-gray-600 text-sm font-medium">
-                    Duyệt đề tài
-                  </p>
-                </Link>
+                {userInfo?.role === "2" ? (
+                  <Link
+                    to={`/ProposedTopic`}
+                    className="flex items-center px-1 py-3 hover:bg-gray-100 transition"
+                  >
+                    <p className="ml-3 text-gray-600 text-sm font-medium">
+                      Đề tài đề xuất
+                    </p>
+                  </Link>
+                ) : (
+                  ""
+                )}
+                {userInfo?.role === "2" ? (
+                  <Link
+                    to={`/BrowseTopics`}
+                    className="flex items-center px-1 py-3 hover:bg-gray-100 transition"
+                  >
+                    <p className="ml-3 text-gray-600 text-sm font-medium">
+                      Duyệt đề tài
+                    </p>
+                  </Link>
+                ) : (
+                  ""
+                )}
+                {userInfo?.role === "2" ? (
+                  <Link
+                    to={`/AppointmentListLecturer`}
+                    className="flex items-center px-1 py-3 hover:bg-gray-100 transition"
+                  >
+                    <p className="ml-3 text-gray-600 text-sm font-medium">
+                      Danh sách cuộc hẹn
+                    </p>
+                  </Link>
+                ) : (
+                  ""
+                )}
+                {userInfo?.role === "1" ? (
+                  <Link
+                    to={`/myTopic`}
+                    className="flex items-center px-1 py-3 hover:bg-gray-100 transition"
+                  >
+                    <p className="ml-3 text-gray-600 text-sm font-medium">
+                      Đề tài của tôi
+                    </p>
+                  </Link>
+                ) : (
+                  ""
+                )}
                 {!userInfo ? (
                   <Link
                     to={`/SignIn`}

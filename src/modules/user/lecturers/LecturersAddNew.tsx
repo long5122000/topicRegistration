@@ -24,8 +24,9 @@ const LecturersAddNew = () => {
       .email("Thông tin đăng nhập phải là dạng Email")
       .required("Vui lòng nhập email"),
     password: yup.string().required("Vui lòng nhập mật khẩu"),
+    mgv: yup.string().required("Vui lòng nhập mã giảng viên"),
     section: yup.string().required("Vui lòng nhập bộ môn"),
-    date: yup.date().typeError("Date is required"),
+    phone: yup.number().required("Vui lòng nhập số điện thoại"),
   });
   const {
     control,
@@ -44,7 +45,8 @@ const LecturersAddNew = () => {
       password: "",
       avatar: "",
       section: "",
-      date: new Date(),
+      mgv: "",
+      phone: "",
       status: "1",
       gender: "1",
       role: "2",
@@ -59,11 +61,12 @@ const LecturersAddNew = () => {
     handleDeleteImage,
   } = useFirebaseImage(setValue, getValues);
   interface values {
+    mgv: string;
     email?: string;
     password?: string;
     fullname?: string;
     section?: string;
-    date: Date;
+    phone: string;
     gender: string;
     status?: string;
     role?: string;
@@ -86,7 +89,8 @@ const LecturersAddNew = () => {
         password: values.password,
         section: values.section,
         gender: values.gender,
-        date: new Date(startDate).toLocaleDateString(),
+        mgv: values.mgv,
+        phone: "0" + String(values.phone),
         avatar: image,
         status: values.status,
         role: "2",
@@ -97,6 +101,7 @@ const LecturersAddNew = () => {
       );
       reset({
         fullname: "",
+        mgv: "",
         email: "",
         password: "",
         avatar: "",
@@ -104,7 +109,7 @@ const LecturersAddNew = () => {
         role: "2",
         section: "",
         gender: "1",
-        date: new Date(),
+        phone: "",
         createdAt: new Date(),
       });
       handleResetUpload();
@@ -147,36 +152,79 @@ const LecturersAddNew = () => {
         </div>
         <div className="form-layout container">
           <Field>
+            <Label>Mã giảng viên</Label>
+            <Input
+              name="mgv"
+              placeholder="Nhập mã giảng viên"
+              control={control}
+            ></Input>
+            <p className="text-[#de3131] text-sm">{errors.mgv?.message}</p>
+          </Field>
+          <Field>
             <Label>Họ và tên</Label>
             <Input
               name="fullname"
-              placeholder="Enter your fullname"
+              placeholder="Nhập họ và tên"
               control={control}
             ></Input>
             <p className="text-[#de3131] text-sm">{errors.fullname?.message}</p>
           </Field>
+        </div>
+        <div className="form-layout container">
           <Field>
             <Label>Email</Label>
             <Input
               name="email"
-              placeholder="Enter your email"
+              placeholder="Nhập email"
               control={control}
               type="email"
             ></Input>
             <p className="text-[#de3131] text-sm">{errors.email?.message}</p>
           </Field>
-        </div>
-        <div className="form-layout container">
           <Field>
             <Label>Mật khẩu</Label>
             <Input
               name="password"
-              placeholder="Enter your password"
+              placeholder="Nhập mật khẩu"
               control={control}
               type="password"
             ></Input>
             <p className="text-[#de3131] text-sm">{errors.password?.message}</p>
           </Field>
+        </div>
+        <div className="form-layout container">
+          <Field>
+            <Label>Trạng thái</Label>
+            <div className="flex flex-wrap gap-x-5">
+              <Radio
+                name="status"
+                control={control}
+                checked={watchStatus === "1"}
+                value={"1"}
+              >
+                Hoạt động
+              </Radio>
+              <Radio
+                name="status"
+                control={control}
+                checked={watchStatus === "2"}
+                value={"2"}
+              >
+                Không hoạt động
+              </Radio>
+            </div>
+          </Field>
+          <Field>
+            <Label>Bộ môn</Label>
+            <Input
+              name="section"
+              placeholder="Nhập số bộ môn"
+              control={control}
+            ></Input>
+            <p className="text-[#de3131] text-sm">{errors.section?.message}</p>
+          </Field>
+        </div>
+        <div className="form-layout container">
           <Field>
             <Label>Giới tính</Label>
             <div className="flex flex-wrap gap-x-5">
@@ -198,62 +246,14 @@ const LecturersAddNew = () => {
               </Radio>
             </div>
           </Field>
-        </div>
-        <div className="form-layout container">
           <Field>
-            <Label>Trạng thái</Label>
-            <div className="flex flex-wrap gap-x-5">
-              <Radio
-                name="status"
-                control={control}
-                checked={watchStatus === "1"}
-                value={"1"}
-              >
-                Hoạt động
-              </Radio>
-              <Radio
-                name="status"
-                control={control}
-                checked={watchStatus === "2"}
-                value={"2"}
-              >
-                Chưa giải quyết
-              </Radio>
-              <Radio
-                name="status"
-                control={control}
-                checked={watchStatus === "3"}
-                value={"3"}
-              >
-                Bị cấm
-              </Radio>
-            </div>
-          </Field>
-          <Field>
-            <Label>Bộ môn</Label>
+            <Label>Điện thoại</Label>
             <Input
-              name="section"
-              placeholder="Enter your section"
+              name="phone"
+              placeholder="Nhập số điện thoại"
               control={control}
             ></Input>
-            <p className="text-[#de3131] text-sm">{errors.section?.message}</p>
-          </Field>
-        </div>
-        <div className="form-layout container">
-          <Field>
-            <Label>Ngày sinh</Label>
-            {/* <Input
-              name="date"
-              placeholder="Enter your date"
-              control={control}
-              type="date"
-            ></Input> */}
-            <DatePicker
-              onChange={setStartDate}
-              value={startDate}
-              format="dd-MM-yyyy"
-            />
-            <p className="text-[#de3131] text-sm">{errors.date?.message}</p>
+            <p className="text-[#de3131] text-sm">{errors.phone?.message}</p>
           </Field>
         </div>
         <Button

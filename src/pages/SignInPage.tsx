@@ -112,7 +112,7 @@ const SignInPage = () => {
                   isLoading={isSubmitting}
                   disabled={isSubmitting}
                 >
-                  Sign In
+                  Đăng nhập
                 </Button>
               </form>
             </div>

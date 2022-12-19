@@ -14,11 +14,17 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase-app/firebase-config";
 
 const TopicPage = () => {
-  const [topicList, setTopicList] = useState([]);
+  const [topicListKL, setTopicListKL] = useState([]);
+  const [topicListTT, setTopicListTT] = useState([]);
+
   useEffect(() => {
     async function getData() {
       const colRef = collection(db, "Topics");
-      const q = query(colRef, where("status", "==", "2"));
+      const q = query(
+        colRef,
+        where("category", "==", "1"),
+        where("status", "==", "2")
+      );
       const querySnapshot = await getDocs(q);
       let result: any = [];
       querySnapshot.forEach((doc) => {
@@ -28,8 +34,28 @@ const TopicPage = () => {
           ...doc.data(),
         });
       });
-
-      setTopicList(result);
+      setTopicListKL(result);
+    }
+    getData();
+  }, []);
+  useEffect(() => {
+    async function getData() {
+      const colRef = collection(db, "Topics");
+      const q = query(
+        colRef,
+        where("category", "==", "2"),
+        where("status", "==", "2")
+      );
+      const querySnapshot = await getDocs(q);
+      let result: any = [];
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        result.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+      setTopicListTT(result);
     }
     getData();
   }, []);
@@ -95,8 +121,8 @@ const TopicPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {topicList.length > 0 &&
-                    topicList.map((topic, index) => (
+                  {topicListKL.length > 0 &&
+                    topicListKL.map((topic, index) => (
                       <tr>
                         <td>{index + 1}</td>
                         <td>
@@ -148,16 +174,23 @@ const TopicPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {topicList.length > 0 &&
-                    topicList.map((topic) => (
+                  {topicListTT.length > 0 &&
+                    topicListTT.map((topic, index) => (
                       <tr>
-                        <td>{topic.stt}</td>
+                        <td>{index + 1}</td>
                         <td>
-                          <Link to={"/detailTopic"}>{topic.name}</Link>
+                          <Link to={`/detailTopic?id=${topic.id}`}>
+                            {topic.name}
+                          </Link>
                         </td>
-                        <td>Nguyen Minh Linh</td>
-                        <td>3</td>
-                        <td>Cont</td>
+
+                        <td>{topic.authName}</td>
+                        <td>{topic.quantity}</td>
+                        {topic.quantity <= 0 ? (
+                          <td>Đã hết</td>
+                        ) : (
+                          <td>Hiện còn</td>
+                        )}
                       </tr>
                     ))}
                 </tbody>

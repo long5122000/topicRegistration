@@ -122,6 +122,8 @@ const ProposedTopicUpdate = () => {
     }
     fetchData();
   }, [topicId, reset]);
+  console.log("sl", selectPlan);
+
   interface values {
     name?: string;
     category?: string;
@@ -140,7 +142,7 @@ const ProposedTopicUpdate = () => {
         name: values.name,
         status: "1",
         category: values.category,
-        plan: selectPlan.name,
+        plan: selectPlan.plan,
         quantity: values.quantity,
         desc: content,
         createdAt: serverTimestamp(),

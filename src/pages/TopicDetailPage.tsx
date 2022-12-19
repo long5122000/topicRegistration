@@ -20,7 +20,10 @@ import {
   collection,
   doc,
   getDoc,
+  onSnapshot,
+  query,
   serverTimestamp,
+  where,
 } from "firebase/firestore";
 import { db } from "../firebase-app/firebase-config";
 import { useAuth } from "../context/auth-context";
@@ -34,8 +37,22 @@ const TopicDetailPage = () => {
   });
   const [params] = useSearchParams();
   const topicId: any = params.get("id");
-
+  const [user, setUser] = useState();
   const [data, setData] = useState([]);
+  useEffect(() => {
+    const colRef = collection(db, "Users");
+    const q = query(colRef, where("email", "==", userInfo.email));
+    onSnapshot(q, (snapshot) => {
+      const result: any = [];
+      snapshot.forEach((doc) => {
+        result.push({
+          id: doc.id,
+        });
+      });
+      setUser(result);
+    });
+  }, []);
+  console.log(user);
 
   useEffect(() => {
     async function fetchData() {
@@ -46,7 +63,7 @@ const TopicDetailPage = () => {
     }
     fetchData();
   }, [topicId]);
-  console.log(data);
+  console.log("data", data);
 
   const handleRegisterTopic = async () => {
     console.log("he");
@@ -56,24 +73,32 @@ const TopicDetailPage = () => {
         name: userInfo.fullname,
         email: userInfo.email,
         date: userInfo.date,
+        userId: user[0].id,
         class: userInfo.class,
         authEmail: data.authEmail,
         status: "1",
+        quantity: data.quantity,
         cv: userInfo.cv,
+        category: userInfo.category,
         topicName: data.name,
         topicId: topicId,
+        msv: userInfo.msv,
+        phone: userInfo.phone,
         createdAt: serverTimestamp(),
       });
       toast.success(`Đã gửi đăng đăng ký đề tài:  ${data.name} successfully!`);
     } catch (error) {
       console.log(error);
-      toast.error("Đăng ký đề tài lỗi!");
+      toast.error(
+        "Đăng ký đề tài lỗi! Vui lòng kiểm tra lại thông tin cá nhân"
+      );
       console.log(error);
     }
   };
+
   return (
     <div>
-      <Heading>Đề tài :{data.name}</Heading>
+      <Heading>Đề tài :{data?.name}</Heading>
 
       <div className="container bg-[#f7ecec] p-6 mt-5 rounded-lg">
         <div className="flex mt-10 gap-x-5 border-b-2 border-gray-400 py-3">
@@ -82,7 +107,7 @@ const TopicDetailPage = () => {
         </div>
         <div className="flex  gap-x-5 border-b-2 border-gray-400  py-3">
           <h3 className="text-xl">Trạng thái:</h3>
-          {data.quatity <= 0 ? (
+          {data.quantity <= 0 ? (
             <p className="text-xl">Đã hết</p>
           ) : (
             <p className="text-xl">Hiện còn</p>
@@ -90,21 +115,35 @@ const TopicDetailPage = () => {
         </div>
         <div className="flex  gap-x-5 border-b-2 border-gray-400 py-3">
           <h3 className="text-xl">Số lượng sinh viên:</h3>
-          <p className="text-xl">1</p>
+          <p className="text-xl">{data.quantity}</p>
         </div>
         <div className="  gap-x-5 border-b-2 border-gray-400 py-3">
           <h3 className="text-xl">Mô tả:</h3>
           <p className="text-xl">{parse(data?.desc || "")}</p>
         </div>
         <div className="flex justify-center pt-14">
-          <Button
-            kind="primary"
-            type="submit"
-            onClick={handleRegisterTopic}
-            className="w-[250px]"
-          >
-            Đăng ký
-          </Button>
+          {data.quantity > 0 &&
+          data?.category === userInfo?.category &&
+          !userInfo.topicId ? (
+            <Button
+              kind="primary"
+              type="submit"
+              onClick={handleRegisterTopic}
+              className="w-[250px]"
+            >
+              Đăng ký
+            </Button>
+          ) : (
+            <Button
+              kind="primary"
+              type="submit"
+              disabled
+              onClick={handleRegisterTopic}
+              className="w-[250px] bg-blue-400"
+            >
+              Đăng ký
+            </Button>
+          )}
         </div>
       </div>
 

@@ -16,11 +16,6 @@ import * as yup from "yup";
 import DatePicker from "react-date-picker";
 import dayjs from "dayjs";
 const LecturersUpdate = () => {
-  const [startDate, setStartDate] = useState(new Date());
-  function formatDateVN(dateString) {
-    var subDateStr = dateString.split("/");
-    return new Date(+subDateStr[2], subDateStr[1] - 1, +subDateStr[0]);
-  }
   const schema = yup.object({
     fullname: yup.string().required("Vui lòng nhập họ và tên"),
     email: yup
@@ -28,7 +23,9 @@ const LecturersUpdate = () => {
       .email("Thông tin đăng nhập phải là dạng Email")
       .required("Vui lòng nhập email"),
     password: yup.string().required("Vui lòng nhập mật khẩu"),
+    mgv: yup.string().required("Vui lòng nhập mã giảng viên"),
     section: yup.string().required("Vui lòng nhập bộ môn"),
+    phone: yup.number().required("Vui lòng nhập số điện thoại"),
   });
   const {
     control,
@@ -57,12 +54,13 @@ const LecturersUpdate = () => {
   const { image, setImage, progress, handleSelectImage, handleDeleteImage } =
     useFirebaseImage(setValue, getValues, imageName, deleteAvatar);
   interface values {
+    mgv: string;
     email?: string;
     password?: string;
     fullname?: string;
     section?: string;
-    date?: string;
-    gender?: string;
+    phone: string;
+    gender: string;
     status?: string;
     role?: string;
     avatar?: string;
@@ -78,7 +76,8 @@ const LecturersUpdate = () => {
         password: values.password,
         section: values.section,
         gender: values.gender,
-        date: new Date(startDate).toLocaleDateString(),
+        mgv: values.mgv,
+        phone: "0" + String(values.phone),
         avatar: image,
         status: values.status,
         role: "2",
@@ -107,14 +106,13 @@ const LecturersUpdate = () => {
       const colRef = doc(db, "Users", userId);
       const docData = await getDoc(colRef);
       reset(docData && docData.data());
-      setStartDate(formatDateVN(docData.data().date));
     }
     fetchData();
   }, [userId, reset]);
 
   return (
     <div className="pb-10 bg-white rounded-2xl">
-      <div className="container flex justify-end">
+      <div className="container ">
         <form onSubmit={handleSubmit(handleUpdateUser)}>
           <div className="w-[200px] h-[200px] mx-auto rounded-full mb-10 mt-5">
             <ImageUpload
@@ -128,37 +126,85 @@ const LecturersUpdate = () => {
           </div>
           <div className="form-layout container">
             <Field>
+              <Label>Mã giảng viên</Label>
+              <Input
+                name="mgv"
+                placeholder="Nhập mã giảng viên"
+                control={control}
+              ></Input>
+              <p className="text-[#de3131] text-sm">{errors.mgv?.message}</p>
+            </Field>
+            <Field>
               <Label>Họ và tên</Label>
               <Input
                 name="fullname"
-                placeholder="Enter your fullname"
+                placeholder="Nhập họ và tên"
                 control={control}
               ></Input>
-            </Field>
-            <Field>
-              <Label>Email</Label>
-              <Input
-                name="email"
-                placeholder="Enter your email"
-                control={control}
-                type="email"
-              ></Input>
-              {/* <p className="text-[#de3131] text-sm">{errors.email?.message}</p> */}
+              <p className="text-[#de3131] text-sm">
+                {errors.fullname?.message}
+              </p>
             </Field>
           </div>
           <div className="form-layout container">
             <Field>
+              <Label>Email</Label>
+              <Input
+                name="email"
+                placeholder="Nhập email"
+                control={control}
+                type="email"
+              ></Input>
+              <p className="text-[#de3131] text-sm">{errors.email?.message}</p>
+            </Field>
+            <Field>
               <Label>Mật khẩu</Label>
               <Input
                 name="password"
-                placeholder="Enter your password"
+                placeholder="Nhập mật khẩu"
                 control={control}
                 type="password"
               ></Input>
-              {/* <p className="text-[#de3131] text-sm">
+              <p className="text-[#de3131] text-sm">
                 {errors.password?.message}
-              </p> */}
+              </p>
             </Field>
+          </div>
+          <div className="form-layout container">
+            <Field>
+              <Label>Trạng thái</Label>
+              <div className="flex flex-wrap gap-x-5">
+                <Radio
+                  name="status"
+                  control={control}
+                  checked={watchStatus === "1"}
+                  value={"1"}
+                >
+                  Hoạt động
+                </Radio>
+                <Radio
+                  name="status"
+                  control={control}
+                  checked={watchStatus === "2"}
+                  value={"2"}
+                >
+                  Không hoạt động
+                </Radio>
+              </div>
+            </Field>
+            <Field>
+              <Label>Bộ môn</Label>
+              <Input
+                name="section"
+                placeholder="Nhập số bộ môn"
+                control={control}
+              ></Input>
+              <p className="text-[#de3131] text-sm">
+                {errors.section?.message}
+              </p>
+            </Field>
+          </div>
+          <div className="form-layout container">
             <Field>
               <Label>Giới tính</Label>
               <div className="flex flex-wrap gap-x-5">
@@ -180,62 +226,14 @@ const LecturersUpdate = () => {
                 </Radio>
               </div>
             </Field>
-          </div>
-          <div className="form-layout container">
             <Field>
-              <Label>Trạng thái</Label>
-              <div className="flex flex-wrap gap-x-5">
-                <Radio
-                  name="status"
-                  control={control}
-                  checked={watchStatus === "1"}
-                  value={"1"}
-                >
-                  Hoạt động
-                </Radio>
-                <Radio
-                  name="status"
-                  control={control}
-                  checked={watchStatus === "2"}
-                  value={"2"}
-                >
-                  Chưa giải quyết
-                </Radio>
-                <Radio
-                  name="status"
-                  control={control}
-                  checked={watchStatus === "3"}
-                  value={"3"}
-                >
-                  Bị cấm
-                </Radio>
-              </div>
-            </Field>
-            <Field>
-              <Label>Bộ môn</Label>
+              <Label>Điện thoại</Label>
               <Input
-                name="section"
-                placeholder="Enter your bộ môn"
+                name="phone"
+                placeholder="Nhập số điện thoại"
                 control={control}
               ></Input>
-              {/* <p className="text-[#de3131] text-sm">{errors.class?.message}</p> */}
-            </Field>
-          </div>
-          <div className="form-layout container">
-            <Field>
-              <Label>Ngày sinh</Label>
-              {/* <Input
-                name="date"
-                ref={inputRef}
-                control={control}
-                type="date"
-              ></Input> */}
-              <DatePicker
-                onChange={setStartDate}
-                value={startDate}
-                format="dd-MM-yyyy"
-              />
-              {/* <p className="text-[#de3131] text-sm">{errors.class?.message}</p> */}
+              <p className="text-[#de3131] text-sm">{errors.phone?.message}</p>
             </Field>
           </div>
           <Button

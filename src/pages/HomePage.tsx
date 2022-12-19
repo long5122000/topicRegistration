@@ -1,4 +1,5 @@
-import React from "react";
+import { collection } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import { Control, FieldValues, useForm, useWatch } from "react-hook-form";
 import Banner from "../components/banner/Banner";
 import Button from "../components/button/Button";
@@ -6,6 +7,8 @@ import Footer from "../components/footer/Footer";
 import Header from "../components/header/Header";
 import Radio from "../components/radio/radio";
 import { useAuth } from "../context/auth-context";
+import { db } from "../firebase-app/firebase-config";
+import AppointmentList from "../modules/appointment/AppointmentList";
 import { ButtonTypes } from "../utils/enums";
 
 const HomePage = () => {
@@ -43,14 +46,31 @@ const HomePage = () => {
         <Button type="button" className="w-[250px] " kind="quaternary">
           Kết quả nghiên cứu{" "}
         </Button>
-        <Button
-          href="/RegisterTopic"
-          type="button"
-          className="w-[250px] "
-          kind="quinary"
-        >
-          Đề xuất đề tài
-        </Button>
+        {userInfo?.role === "2" ? (
+          <Button
+            href="/RegisterTopic"
+            type="button"
+            className="w-[250px] "
+            kind="quinary"
+          >
+            Đề xuất đề tài
+          </Button>
+        ) : (
+          ""
+        )}
+        {userInfo?.topicId ? (
+          <Button
+            href="/ProgressReports
+"
+            type="button"
+            className="w-[250px] "
+            kind="quinary"
+          >
+            Báo cáo tiến độ
+          </Button>
+        ) : (
+          ""
+        )}
       </div>
       <div className="container grid grid-cols-3 gap-4 py-10">
         <div className="col-span-2  min-h-[400px] ">
@@ -59,7 +79,8 @@ const HomePage = () => {
               Tin tức{" "}
             </h3>
           </div>
-          <div className="">
+          <AppointmentList></AppointmentList>
+          {/* <div className="">
             <p className="text py-3 pl-3 border-b-2">
               TK Nguyen đã thêm một ảnh mới vào album: [NRG Asia] Be Legendary
               🕹🇻🇳🏆
@@ -87,7 +108,7 @@ const HomePage = () => {
               TK Nguyen đã thêm một ảnh mới vào album: [NRG Asia]
               <span className="text-[#8b8b8b] text-xs pl-5">(29/10/2020)</span>
             </p>
-          </div>
+          </div> */}
           <div className="flex justify-end">
             <p>Xem them</p>{" "}
           </div>

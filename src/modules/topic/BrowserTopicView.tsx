@@ -1,4 +1,12 @@
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
@@ -16,6 +24,8 @@ import "react-pdf/dist/esm/Page/TextLayer.css";
 import { pdfjs } from "react-pdf";
 import Button from "../../components/button/Button";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
+import LabelStatus from "../../components/label/LabelStatus";
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 const options = {
   cMapUrl: "cmaps/",
@@ -27,6 +37,7 @@ const BrowserTopicView = () => {
   const topicId: any = params.get("id");
 
   const [data, setData] = useState<any>([]);
+
   console.log(data);
   const [isOpen, setIsOpen] = useState(false);
   const {
@@ -46,7 +57,7 @@ const BrowserTopicView = () => {
 
   const [file, setFile] = useState("");
   if (fileName.length > 0) {
-    getDownloadURL(ref(getStorage(), fileName)).then((url) => {
+    getDownloadURL(ref(getStorage(), "file/" + fileName)).then((url) => {
       setFile(url);
     });
   }
@@ -69,7 +80,7 @@ const BrowserTopicView = () => {
   function nextPage() {
     changePage(1);
   }
-  const watchStatus = watch("status");
+  const watchCategory = watch("category");
   useEffect(() => {
     async function fetchData() {
       if (!topicId) return;
@@ -80,25 +91,20 @@ const BrowserTopicView = () => {
     }
     fetchData();
   }, [topicId, reset]);
+  console.log("data", data);
+
   interface values {
-    status?: string;
+    category?: string;
     quatity?: number;
   }
-  const handleBrowserTopic = async (values: values): Promise<void> => {
-    console.log("je");
-
+  const refuseToRegister = async (values: values): Promise<void> => {
     if (!isValid) {
-      console.log("cc");
       return;
     }
     try {
-      const colRef1 = doc(db, "Topics", data.topicId);
-      await updateDoc(colRef1, {
-        quantity: 0,
-      });
       const colRef2 = doc(db, "RegisterTopic", topicId);
       await updateDoc(colRef2, {
-        status: "2",
+        status: "3",
       });
       toast.success("Update user information successfully!");
     } catch (error) {
@@ -107,11 +113,60 @@ const BrowserTopicView = () => {
       console.log(error);
     }
   };
+  const handleBrowserTopic = async (values: values): Promise<void> => {
+    if (!isValid) {
+      return;
+    }
+    try {
+      const colRef1 = doc(db, "Topics", data.topicId);
+
+      await updateDoc(colRef1, {
+        quantity: data.quantity - 1,
+      });
+      const colRef2 = doc(db, "RegisterTopic", topicId);
+      await updateDoc(colRef2, {
+        status: "2",
+      });
+      const colRef3 = doc(db, "Users", data.userId);
+      await updateDoc(colRef3, {
+        topicId: data.topicId,
+        authEmail: data.authEmail,
+      });
+      toast.success("Update user information successfully!");
+    } catch (error) {
+      console.log(error);
+      toast.error("Update user failed!");
+      console.log(error);
+    }
+  };
+  const renderStudentCategory = (status: any) => {
+    switch (status) {
+      case "1":
+        return (
+          <LabelStatus className="" type="success">
+            Khóa luận tốt nghiệp
+          </LabelStatus>
+        );
+      case "2":
+        return (
+          <LabelStatus className="" type="warning">
+            Thực tập chuyên ngành
+          </LabelStatus>
+        );
+      default:
+        break;
+    }
+  };
   return (
     <div className="pb-10 bg-white">
       <Heading>Đề tài: {data.topicName}</Heading>
       <form>
         <div className="form-layout container mt-5">
+          <Field>
+            {" "}
+            <Label>Mã sinh viên</Label>
+            <Input name="msv" disabled control={control}></Input>{" "}
+          </Field>
           <Field>
             {" "}
             <Label>Tên sinh viên</Label>
@@ -122,27 +177,17 @@ const BrowserTopicView = () => {
             <Label>Email</Label>
             <Input name="email" disabled control={control}></Input>{" "}
           </Field>
+          <Field>
+            {" "}
+            <Label>Số điện thoại</Label>
+            <Input name="phone" disabled control={control}></Input>{" "}
+          </Field>
         </div>
         <div className="form-layout container mt-5">
           <Field>
-            <div className="flex flex-wrap gap-x-5">
-              <Radio
-                name="category"
-                checked={watchStatus === "1"}
-                control={control}
-                value={"1"}
-              >
-                KLTN
-              </Radio>
-              <Radio
-                name="category"
-                checked={watchStatus === "2"}
-                control={control}
-                value={"2"}
-              >
-                TTCN
-              </Radio>
-            </div>
+            <Label>Thể loại đăng ký</Label>
+
+            {renderStudentCategory(data?.category)}
           </Field>
           <Field>
             <Label>Ngày tạo</Label>
@@ -205,10 +250,12 @@ const BrowserTopicView = () => {
             Duyệt đơn đăng ký
           </Button>
           <Button
-            href="/ListLecturers"
             type="button"
+            onClick={refuseToRegister}
             className="w-[250px]"
             kind="thirdary"
+            isLoading={isSubmitting}
+            disabled={isSubmitting}
           >
             Từ chối đơn đăng ký
           </Button>

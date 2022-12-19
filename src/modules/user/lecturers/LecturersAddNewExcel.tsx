@@ -19,9 +19,10 @@ const LecturersAddNewExcel = () => {
     Name: string;
     Email: string;
     Password: string;
+    Mgv: string;
     Section: string;
     Gender: number;
-    Date: string;
+    Phone: string;
     Status: string;
   }
   const [file, setFile] = useState(null);
@@ -40,17 +41,10 @@ const LecturersAddNewExcel = () => {
         );
       case 2:
         return (
-          <LabelStatus className="" type="warning">
-            Chưa giải quyết
-          </LabelStatus>
-        );
-      case 3:
-        return (
           <LabelStatus className="" type="danger">
-            Bị cấm
+            Không Hoạt động
           </LabelStatus>
         );
-
       default:
         break;
     }
@@ -113,9 +107,10 @@ const LecturersAddNewExcel = () => {
           fullname: pres.Name,
           email: pres.Email,
           password: pres.Password,
+          mgv: pres.Mgv,
           section: pres.Section,
           gender: String(pres.Gender),
-          date: pres.Date,
+          phone: pres.Phone,
           status: String(pres.Status),
           role: "2",
           createdAt: serverTimestamp(),
@@ -165,17 +160,18 @@ const LecturersAddNewExcel = () => {
       <div className="container">
         <Button className="" kind="primary" onClick={handleCreateUser}>
           {" "}
-          AddNewUsers
+          Thêm giảng viên
         </Button>
         <Table>
           <thead>
             <tr>
+              <th>Mã giảng viên </th>
               <th>Tên </th>
               <th>Email </th>
               <th>Mật khẩu</th>
               <th>Bộ môn</th>
               <th>Giới tính</th>
-              <th>Sinh nhật</th>
+              <th>Điện thoại</th>
               <th>Trạng thái </th>
             </tr>
           </thead>
@@ -183,12 +179,13 @@ const LecturersAddNewExcel = () => {
             {pres &&
               pres.map((pres) => (
                 <tr>
+                  <td>{pres.Mgv}</td>
                   <td>{pres.Name}</td>
                   <td>{pres.Email}</td>
                   <td>{pres.Password}</td>
                   <td>{pres.Section}</td>
                   <td>{renderStudentGender(pres?.Gender)}</td>
-                  <td>{pres?.Date}</td>
+                  <td>{pres.Phone}</td>
                   <td>{renderStudentStatus(pres?.Status)}</td>
                 </tr>
               ))}

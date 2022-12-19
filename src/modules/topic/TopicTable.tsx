@@ -46,7 +46,7 @@ const TopicTable = () => {
       case "3":
         return (
           <LabelStatus className="" type="danger">
-            Đã hủy
+            Bị từ chối
           </LabelStatus>
         );
 
