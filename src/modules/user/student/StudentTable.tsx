@@ -125,7 +125,7 @@ const StudentTable = () => {
 
   const renderUserItem = (user: any) => (
     <tr key={user.id}>
-      <td title={user.id}>{user.id.slice(0, 5) + "..."}</td>
+      <td title={user.msv}>{user.msv}</td>
       <td>{user?.fullname}</td>
       <td title={user?.email}>{user?.email.slice(0, 10) + "..."}</td>
       <td title={user?.password}>{user?.password}</td>
@@ -156,7 +156,7 @@ const StudentTable = () => {
       <Table>
         <thead>
           <tr>
-            <th>Id</th>
+            <th>Mã sinh viên</th>
             <th>Tên </th>
             <th>Email </th>
             <th>Mật khẩu</th>

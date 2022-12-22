@@ -10,11 +10,11 @@ const UserStudentList = () => {
         title="Student"
         desc="Manage your user"
       ></DashboardHeading>
-      <div className="flex justify-end mb-10 ">
+      {/* <div className="flex justify-end mb-10 ">
         <Button className="" kind="primary" href="/manage/StudentAddNewExcel">
           Add new Student
         </Button>
-      </div>
+      </div> */}
       <StudentTable></StudentTable>
     </div>
   );

@@ -14,7 +14,7 @@ const AdminList = () => {
       ></DashboardHeading>
       <div className="flex justify-end mb-10 ">
         <Button className="" kind="primary" href="/manage/AdminAddNewExcel">
-          Add new Lecturer
+          Thêm mới
         </Button>
       </div>
       <AdminTable></AdminTable>

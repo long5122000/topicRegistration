@@ -131,7 +131,7 @@ const RegisterTopic = () => {
         authEmail: userInfo.email,
         createdAt: serverTimestamp(),
       });
-      toast.success("Create new topic successfully!");
+      toast.success("Gửi đơn đề xuất đề tài thành công!");
     } catch (error: any) {
       toast.error(error.message);
     } finally {

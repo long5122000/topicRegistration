@@ -1,0 +1,120 @@
+import { collection, onSnapshot, query, where } from "firebase/firestore";
+import React, { useCallback, useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import Table from "../../../components/table/Table";
+import { useAuth } from "../../../context/auth-context";
+import { db } from "../../../firebase-app/firebase-config";
+import ModalImage from "react-modal-image";
+import { Document, Page } from "react-pdf";
+import "react-pdf/dist/esm/Page/AnnotationLayer.css";
+import "react-pdf/dist/esm/Page/TextLayer.css";
+import { pdfjs } from "react-pdf";
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+const options = {
+  cMapUrl: "cmaps/",
+  cMapPacked: true,
+  standardFontDataUrl: "standard_fonts/",
+};
+const InternshipOutlineLecturerView = () => {
+  const [params] = useSearchParams();
+  const { userInfo } = useAuth();
+  const ConfirmationId: any = params.get("id");
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
+  const [appointmentList, setAppointmentList] = useState([]);
+  const [userList, setUserList] = useState([]);
+  useEffect(() => {
+    const colRef = collection(db, "InternshipOutlineList");
+    const q = query(colRef, where("idCom", "==", ConfirmationId));
+    onSnapshot(q, (snapshot) => {
+      const result: any = [];
+      snapshot.forEach((doc) => {
+        result.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+      setAppointmentList(result);
+    });
+  }, []);
+  useEffect(() => {
+    const colRef = collection(db, "Users");
+    const q = query(colRef, where("authEmail", "==", userInfo.email));
+    onSnapshot(q, (snapshot) => {
+      const result: any = [];
+      snapshot.forEach((doc) => {
+        result.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+      setUserList(result);
+    });
+  }, []);
+  console.log(userList);
+
+  const openImageViewer = useCallback((index) => {
+    setIsViewerOpen(true);
+  }, []);
+
+  const closeImageViewer = () => {
+    setIsViewerOpen(false);
+  };
+  const renderAppointItem = (user: any) => (
+    <tr key={user.id}>
+      <td title={user.msv}>{user.msv}</td>
+      <td>{user?.fullname}</td>
+      <td>
+        <a href={user?.file} target="_blank" className="text-red-400">
+          {user?.fileName}
+        </a>
+      </td>
+    </tr>
+  );
+  const renderUserItem = (user: any) => (
+    <tr key={user.id}>
+      <td title={user.msv}>{user.msv}</td>
+      <td>{user?.fullname}</td>
+      <td>{user?.class}</td>
+    </tr>
+  );
+  return (
+    <div className="container flex justify-around gap-x-5">
+      <div className="pt-5">
+        <h2 className="text-xl font-bold">Danh sách đã nộp</h2>
+        <div>
+          <Table>
+            <thead>
+              <tr>
+                <th>Mã sinh viên </th>
+                <th>Tên </th>
+
+                <th>Tài liệu</th>
+              </tr>
+            </thead>
+            <tbody>
+              {appointmentList.length > 0 &&
+                appointmentList.map(renderAppointItem)}
+            </tbody>
+          </Table>
+        </div>
+      </div>
+      <div className="pt-5">
+        <h2 className="text-xl font-bold">Danh sách sinh viên</h2>
+        <div>
+          <Table>
+            <thead>
+              <tr>
+                <th>Mã sinh viên </th>
+                <th>Tên </th>
+                <th>Lớp</th>
+              </tr>
+            </thead>
+            <tbody>{userList.length > 0 && userList.map(renderUserItem)}</tbody>
+          </Table>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default InternshipOutlineLecturerView;

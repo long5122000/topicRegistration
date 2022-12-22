@@ -210,9 +210,12 @@ const BrowserTopicView = () => {
           <Field>
             {" "}
             <Label>CV</Label>
-            <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
-              <Page pageNumber={pageNumber} />
-            </Document>
+            <a href={file} target="_blank">
+              {" "}
+              <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
+                <Page pageNumber={pageNumber} />
+              </Document>
+            </a>
             <div>
               <p className="text-center">
                 Page {pageNumber || (numPages ? 1 : "--")} of {numPages || "--"}

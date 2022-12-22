@@ -112,7 +112,6 @@ const MyInfoPage = () => {
         avatar: image,
         cv: file,
         phone: "0" + String(values.phone),
-
         createdAt: serverTimestamp(),
       });
       toast.success("Update user information successfully!");

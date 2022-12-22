@@ -82,9 +82,7 @@ const Header = () => {
                 />
               </svg>
               <div className="absolute w-[150px] right-0 top-full bg-white shadow-md py-3 divide-y divide-gray-300 divide-dashed rounded-xl z-10 transitioz-10 invisible group-hover:visible">
-                {userInfo?.role === "1" ? (
-                  ""
-                ) : (
+                {userInfo?.role === "3" ? (
                   <Link
                     to={`/dashboard`}
                     className="flex items-center px-1 py-3 hover:bg-gray-100 transition"
@@ -93,6 +91,8 @@ const Header = () => {
                       Quản trị
                     </p>
                   </Link>
+                ) : (
+                  ""
                 )}
                 <Link
                   to={`/myInfo`}
@@ -128,11 +128,11 @@ const Header = () => {
                 )}
                 {userInfo?.role === "2" ? (
                   <Link
-                    to={`/AppointmentListLecturer`}
+                    to={`/AppointmentManage`}
                     className="flex items-center px-1 py-3 hover:bg-gray-100 transition"
                   >
                     <p className="ml-3 text-gray-600 text-sm font-medium">
-                      Danh sách cuộc hẹn
+                      Cuộc hẹn
                     </p>
                   </Link>
                 ) : (

@@ -181,7 +181,7 @@ const AdminAddNew = () => {
           isLoading={isSubmitting}
           disabled={isSubmitting}
         >
-          Add new user
+          Thêm mới
         </Button>
       </form>
     </div>

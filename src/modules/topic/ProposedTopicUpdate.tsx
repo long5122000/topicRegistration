@@ -52,10 +52,10 @@ const ProposedTopicUpdate = () => {
           return category === "1"
             ? schema
                 .min(1, "Số lượng sinh viên không được nhỏ hơn 1")
-                .max(3, "Số lượng sinh viên không được lớn hơn 3")
+                .max(1, "Số lượng sinh viên không được lớn hơn 1")
             : schema
                 .min(1, "Số lượng sinh viên không được nhỏ hơn 1")
-                .max(1, "Số lượng sinh viên không được lớn hơn 1");
+                .max(3, "Số lượng sinh viên không được lớn hơn 3");
         }),
       category: yup.string().required(),
     })

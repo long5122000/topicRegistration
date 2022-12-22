@@ -136,7 +136,7 @@ const AdminAddNewExcel = () => {
       <div className="container">
         <Button className="" kind="primary" onClick={handleCreateUser}>
           {" "}
-          AddNewUsers
+          Thêm mới
         </Button>
         <Table>
           <thead>

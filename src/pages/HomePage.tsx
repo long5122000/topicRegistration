@@ -60,13 +60,13 @@ const HomePage = () => {
         )}
         {userInfo?.topicId ? (
           <Button
-            href="/ProgressReports
+            href="/AppointmentList
 "
             type="button"
             className="w-[250px] "
             kind="quinary"
           >
-            Báo cáo tiến độ
+            Danh sách cuộc hẹn
           </Button>
         ) : (
           ""
@@ -79,7 +79,7 @@ const HomePage = () => {
               Tin tức{" "}
             </h3>
           </div>
-          <AppointmentList></AppointmentList>
+
           {/* <div className="">
             <p className="text py-3 pl-3 border-b-2">
               TK Nguyen đã thêm một ảnh mới vào album: [NRG Asia] Be Legendary

@@ -41,26 +41,37 @@ import Sample from "./Sample";
 import MyInfoPage from "./pages/MyInfoPage";
 import BrowserTopicPage from "./pages/BrowserTopicPage";
 import BrowserTopicView from "./modules/topic/BrowserTopicView";
-import Modal from "react-modal";
+
 import ProgressReportsPage from "./pages/ProgressReportsPage";
 import AppointmentAddNew from "./modules/appointment/AppointmentAddNew";
 import AppointmentDetailPage from "./pages/AppointmentDetailPage";
 import AppointmentListLecturer from "./modules/appointment/AppointmentListLecturer";
 import AppointmentView from "./modules/appointment/AppointmentView";
+import AppointmentListLecturerView from "./modules/appointment/AppointmentListLecturerView";
+import AppointmentManage from "./modules/appointment/AppointmentManage";
+import BaseConfirmationList from "./modules/appointment/BaseConfirmation/BaseConfirmationList";
+import BaseConfirmationAddNew from "./modules/appointment/BaseConfirmation/BaseConfirmationAddNew";
+import AppointmentList from "./modules/appointment/AppointmentList";
+import BaseConfirmationDetail from "./modules/appointment/BaseConfirmation/BaseConfirmationDetail";
+import BaseConfirmationLecturerView from "./modules/appointment/BaseConfirmation/BaseConfirmationLecturerView";
+import BaseConfirmationLecturerEdit from "./modules/appointment/BaseConfirmation/BaseConfirmationLecturerEdit";
+import InternshipAssessmentAddNew from "./modules/appointment/InternshipAssessment/InternshipAssessmentAddNew";
+import InternshipAssessmentList from "./modules/appointment/InternshipAssessment/InternshipAssessmentList";
+import InternshipAssessmentDetail from "./modules/appointment/InternshipAssessment/InternshipAssessmentDetail";
+import InternshipAssessmentLecturerView from "./modules/appointment/InternshipAssessment/InternshipAssessmentLecturerView";
+import InternshipBaseOpinionAddNew from "./modules/appointment/InternshipBaseOpinion/InternshipBaseOpinionAddNew";
+import InternshipBaseOpinionList from "./modules/appointment/InternshipBaseOpinion/InternshipBaseOpinionList";
+import InternshipBaseOpinionDetail from "./modules/appointment/InternshipBaseOpinion/InternshipBaseOpinionDetail";
+import InternshipBaseOpinionLecturerView from "./modules/appointment/InternshipBaseOpinion/InternshipBaseOpinionLecturerView";
+import InternshipOutlineAddNew from "./modules/appointment/InternshipOutline/InternshipOutlineAddNew";
+import InternshipOutlineList from "./modules/appointment/InternshipOutline/InternshipOutlineList";
+import InternshipOutlineDetail from "./modules/appointment/InternshipOutline/InternshipOutlineDetail";
+import InternshipOutlineLecturerView from "./modules/appointment/InternshipOutline/InternshipOutlineLecturerView";
+import InternshipReportAddNew from "./modules/appointment/InternshipReport/InternshipReportAddNew";
+import InternshipReportList from "./modules/appointment/InternshipReport/InternshipReportList";
+import InternshipReportDetail from "./modules/appointment/InternshipReport/InternshipReportDetail";
+import InternshipReportLecturerView from "./modules/appointment/InternshipReport/InternshipReportLecturerView";
 
-const customStyles = {
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-  },
-};
-
-Modal.setAppElement("#root");
-Modal.defaultStyles = {};
 function App() {
   return (
     <div>
@@ -116,8 +127,22 @@ function App() {
               element={<AppointmentAddNew></AppointmentAddNew>}
             ></Route>
             <Route
+              path="/AppointmentManage"
+              element={<AppointmentManage></AppointmentManage>}
+            ></Route>
+            <Route
+              path="/AppointmentList"
+              element={<AppointmentList></AppointmentList>}
+            ></Route>
+            <Route
               path="/AppointmentListLecturer"
               element={<AppointmentListLecturer></AppointmentListLecturer>}
+            ></Route>
+            <Route
+              path="/AppointmentListLecturerView"
+              element={
+                <AppointmentListLecturerView></AppointmentListLecturerView>
+              }
             ></Route>
             <Route
               path="/AppointmentDetail"
@@ -126,6 +151,110 @@ function App() {
             <Route
               path="/AppointmentView"
               element={<AppointmentView></AppointmentView>}
+            ></Route>
+            <Route
+              path="/BaseConfirmationList"
+              element={<BaseConfirmationList></BaseConfirmationList>}
+            ></Route>
+            <Route
+              path="/BaseConfirmationDetail"
+              element={<BaseConfirmationDetail></BaseConfirmationDetail>}
+            ></Route>
+            <Route
+              path="/BaseConfirmationLecturerView"
+              element={
+                <BaseConfirmationLecturerView></BaseConfirmationLecturerView>
+              }
+            ></Route>
+            <Route
+              path="/BaseConfirmationLecturerEdit"
+              element={
+                <BaseConfirmationLecturerEdit></BaseConfirmationLecturerEdit>
+              }
+            ></Route>
+            <Route
+              path="/BaseConfirmationAddNew"
+              element={<BaseConfirmationAddNew></BaseConfirmationAddNew>}
+            ></Route>
+            <Route
+              path="/InternshipAssessmentAddNew"
+              element={
+                <InternshipAssessmentAddNew></InternshipAssessmentAddNew>
+              }
+            ></Route>
+            <Route
+              path="/InternshipAssessmentList"
+              element={<InternshipAssessmentList></InternshipAssessmentList>}
+            ></Route>
+            <Route
+              path="/InternshipAssessmentDetail"
+              element={
+                <InternshipAssessmentDetail></InternshipAssessmentDetail>
+              }
+            ></Route>
+            <Route
+              path="/InternshipAssessmentLecturerView"
+              element={
+                <InternshipAssessmentLecturerView></InternshipAssessmentLecturerView>
+              }
+            ></Route>
+            <Route
+              path="/InternshipBaseOpinionAddNew"
+              element={
+                <InternshipBaseOpinionAddNew></InternshipBaseOpinionAddNew>
+              }
+            ></Route>
+            <Route
+              path="/InternshipBaseOpinionList"
+              element={<InternshipBaseOpinionList></InternshipBaseOpinionList>}
+            ></Route>
+            <Route
+              path="/InternshipBaseOpinitonDetail"
+              element={
+                <InternshipBaseOpinionDetail></InternshipBaseOpinionDetail>
+              }
+            ></Route>
+            <Route
+              path="/InternshipBaseOpinionLecturerView"
+              element={
+                <InternshipBaseOpinionLecturerView></InternshipBaseOpinionLecturerView>
+              }
+            ></Route>
+            <Route
+              path="/InternshipOutlineAddNew"
+              element={<InternshipOutlineAddNew></InternshipOutlineAddNew>}
+            ></Route>
+            <Route
+              path="/InternshipOutList"
+              element={<InternshipOutlineList></InternshipOutlineList>}
+            ></Route>
+            <Route
+              path="/InternshipOutlineDetail"
+              element={<InternshipOutlineDetail></InternshipOutlineDetail>}
+            ></Route>
+            <Route
+              path="/InternshipOutlineLecturerView"
+              element={
+                <InternshipOutlineLecturerView></InternshipOutlineLecturerView>
+              }
+            ></Route>
+            <Route
+              path="/InternshipReportAddNew"
+              element={<InternshipReportAddNew></InternshipReportAddNew>}
+            ></Route>
+            <Route
+              path="/InternshipReportList"
+              element={<InternshipReportList></InternshipReportList>}
+            ></Route>
+            <Route
+              path="/InternshipReportDetail"
+              element={<InternshipReportDetail></InternshipReportDetail>}
+            ></Route>
+            <Route
+              path="/InternshipReportLecturerView"
+              element={
+                <InternshipReportLecturerView></InternshipReportLecturerView>
+              }
             ></Route>
           </Route>
           <Route element={<DashBoardLayout></DashBoardLayout>}>

@@ -9,7 +9,7 @@ const PlanList = () => {
       <DashboardHeading title="Plan" desc=""></DashboardHeading>
       <div className="flex justify-end mb-10 ">
         <Button className="" kind="primary" href="/manage/AddNewPlan">
-          Add new Plan
+          Thêm mới
         </Button>
       </div>
       <PlanTable></PlanTable>

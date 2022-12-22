@@ -1,8 +1,11 @@
+import dayjs from "dayjs";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
+  getDocs,
   onSnapshot,
   query,
   updateDoc,
@@ -11,30 +14,25 @@ import {
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import Button from "../components/button/Button";
-import { db } from "../firebase-app/firebase-config";
-import Heading from "../layout/Heading";
 import parse from "html-react-parser";
-import ImageUpload from "../components/image/ImageUpload";
-import Field from "../components/field/Field";
-import Label from "../components/label/Label";
-import Input from "../components/input/Input";
-import useFirebaseImage from "../hooks/useFirebaseImage";
-import Countdown from "react-countdown";
-import dayjs from "dayjs";
-import { useAuth } from "../context/auth-context";
 import { toast } from "react-toastify";
-import SignInPage from "./SignInPage";
+import Button from "../../../components/button/Button";
+import Field from "../../../components/field/Field";
+import ImageUpload from "../../../components/image/ImageUpload";
+import Label from "../../../components/label/Label";
+import { useAuth } from "../../../context/auth-context";
+import { db } from "../../../firebase-app/firebase-config";
+import useFirebaseImage from "../../../hooks/useFirebaseImage";
+import Heading from "../../../layout/Heading";
 
-const AppointmentDetailPage = () => {
+const InternshipAssessmentDetail = () => {
   const [params] = useSearchParams();
-  const appointmentId: any = params.get("id");
+  const confirmationId: any = params.get("id");
   const { userInfo } = useAuth();
+  const userId = userInfo?.email;
   const navigate = useNavigate();
-
-  console.log(userInfo);
-
   const [data, setData] = useState([]);
+  const [students, setStudents] = useState([]);
   const {
     control,
     handleSubmit,
@@ -47,10 +45,11 @@ const AppointmentDetailPage = () => {
     mode: "onChange",
     defaultValues: {},
   });
-  const imageUrl = userInfo?.appointmentImage;
+  const imageUrl = getValues("internshipImage");
+  console.log(imageUrl);
+
   const imageRegex: any = /%2F(\S+)\?/gm.exec(imageUrl);
   const imageName: any = imageRegex?.length > 0 ? imageRegex[1] : "";
-  console.log(imageUrl);
 
   const {
     image,
@@ -59,8 +58,7 @@ const AppointmentDetailPage = () => {
     handleSelectImage,
     handleDeleteImage,
   } = useFirebaseImage(setValue, getValues, imageName, deleteAvatar);
-  const [application, setApplication] = useState();
-
+  const [confirmation, setComfirmation] = useState();
   useEffect(() => {
     const colRef = collection(db, "Users");
     const q = query(
@@ -75,42 +73,81 @@ const AppointmentDetailPage = () => {
           id: doc.id,
         });
       });
-      setApplication(result);
+      setComfirmation(result);
     });
   }, [userInfo]);
-  async function deleteAvatar() {
-    const colRef = doc(db, "Users", application[0].id);
-    await updateDoc(colRef, {
-      appointmentImage: "",
-    });
-  }
-  console.log(application);
+  console.log(confirmation);
+  useEffect(() => {
+    async function getData() {
+      const colRef = collection(db, "InternshipAssessmentList");
+      const q = query(colRef, where("msv", "==", userInfo.msv));
+      const querySnapshot = await getDocs(q);
+
+      let result: any = [];
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        result.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+      setStudents(result);
+    }
+    getData();
+  }, []);
+  console.log("st", students);
   useEffect(() => {
     setImage(imageUrl);
   }, [imageUrl, setImage]);
+  async function deleteAvatar() {
+    const colRef = doc(db, "Users", confirmation[0].id);
+    await updateDoc(colRef, {
+      internshipImage: "",
+    });
+  }
+
   useEffect(() => {
     async function fetchData() {
-      if (!appointmentId) return;
-      const colRef = doc(db, "Appointments", appointmentId);
+      if (!confirmationId) return;
+      const colRef = doc(db, "InternshipAssessments", confirmationId);
       const docData = await getDoc(colRef);
       if (docData) setData(docData.data());
     }
     fetchData();
-  }, [appointmentId]);
-  console.log(data);
+  }, [confirmationId]);
+  useEffect(() => {
+    async function getData() {
+      const colRef = collection(db, "Users");
+      const q = query(colRef, where("email", "==", userId));
+      const querySnapshot = await getDocs(q);
 
-  const handleApplication = async (values: values): Promise<void> => {
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+
+        reset(doc.data());
+      });
+    }
+    getData();
+  }, [userId, reset]);
+  const handleConfirmation = async (values: values): Promise<void> => {
     if (!isValid) return;
     try {
-      const colRef = collection(db, "AppointmentList");
+      students.forEach(async (item) => {
+        await deleteDoc(doc(db, "InternshipAssessmentList", item.id));
+      });
+      const colRef = collection(db, "InternshipAssessmentList");
       await addDoc(colRef, {
-        id: appointmentId,
+        idCom: confirmationId,
         image: image,
         name: data.name,
         msv: userInfo.msv,
         fullname: userInfo.fullname,
         emailLectured: data.emailLectured,
         createdAt: new Date(),
+      });
+      const colRef1 = doc(db, "Users", confirmation[0].id);
+      await updateDoc(colRef1, {
+        internshipImage: image,
       });
       toast.success(`Gửi thông tin thành công`);
     } catch (error) {
@@ -122,7 +159,7 @@ const AppointmentDetailPage = () => {
       <Heading>Thông báo: {data?.name}</Heading>
       <div className="pb-10 bg-white rounded-2xl">
         <div className="container flex justify-center">
-          <form onSubmit={handleSubmit(handleApplication)}>
+          <form onSubmit={handleSubmit(handleConfirmation)}>
             <div className="form-layout container mt-5">
               <Field className="overflow-auto border border-gray-300">
                 <Label>Mô tả</Label>
@@ -178,4 +215,4 @@ const AppointmentDetailPage = () => {
   );
 };
 
-export default AppointmentDetailPage;
+export default InternshipAssessmentDetail;

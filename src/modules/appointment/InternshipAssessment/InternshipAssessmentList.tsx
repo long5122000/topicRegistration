@@ -1,17 +1,25 @@
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
 import React, { useCallback, useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import ActionDelete from "../../components/actions/ActionDelete";
-import ActionEdit from "../../components/actions/ActionEdit";
-import ActionView from "../../components/actions/ActionView";
-import Button from "../../components/button/Button";
-import LabelStatus from "../../components/label/LabelStatus";
-import Table from "../../components/table/Table";
-import { useAuth } from "../../context/auth-context";
-import { db } from "../../firebase-app/firebase-config";
-import ModalImage from "react-modal-image";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
+import ActionDelete from "../../../components/actions/ActionDelete";
+import ActionEdit from "../../../components/actions/ActionEdit";
+import ActionView from "../../../components/actions/ActionView";
+import Button from "../../../components/button/Button";
+import LabelStatus from "../../../components/label/LabelStatus";
+import Table from "../../../components/table/Table";
+import { useAuth } from "../../../context/auth-context";
+import { db } from "../../../firebase-app/firebase-config";
 
-const AppointmentListLecturer = () => {
+const InternshipAssessmentList = () => {
   const { userInfo } = useAuth();
   const navigate = useNavigate();
   const [appointmentList, setAppointmentList] = useState([]);
@@ -25,7 +33,7 @@ const AppointmentListLecturer = () => {
   };
 
   useEffect(() => {
-    const colRef = collection(db, "Appointments");
+    const colRef = collection(db, "InternshipAssessments");
     const q = query(colRef, where("emailLectured", "==", userInfo.email));
     onSnapshot(q, (snapshot) => {
       const result: any = [];
@@ -38,7 +46,8 @@ const AppointmentListLecturer = () => {
       setAppointmentList(result);
     });
   }, []);
-  const imageUrl = userInfo.appointmentImage;
+
+  const imageUrl = userInfo.internshipImage;
 
   const imageRegex: any = /%2F(\S+)\?/gm.exec(imageUrl);
   const imageName: any = imageRegex?.length > 0 ? imageRegex[1] : "";
@@ -62,6 +71,28 @@ const AppointmentListLecturer = () => {
         break;
     }
   };
+  const handleDeledeConfirmation = async (item: any) => {
+    // if (userInfo?.Role !== userRole.ADMIN) {
+    //   Swal.fire("Failed", "You have no right to do this action", "warning");
+    //   return;
+    // }
+    const colRef = doc(db, "InternshipAssessments", item.id);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result: any) => {
+      if (result.isConfirmed) {
+        await deleteDoc(colRef);
+        toast.success("Xóa cuộc hẹn thành công ");
+        Swal.fire("Deleted!", "Your file has been deleted.", "success");
+      }
+    });
+  };
   const renderPlanItem = (topic: any) => (
     <tr key={topic.id}>
       <td title={topic.id}>{topic.id.slice(0, 5) + "..."}</td>
@@ -84,13 +115,19 @@ const AppointmentListLecturer = () => {
         <div className="flex items-center gap-x-3 text-gray-500">
           <ActionView
             onClick={() =>
-              navigate(`/AppointmentListLecturerView?id=${topic.id}`)
+              navigate(`/InternshipAssessmentLecturerView?id=${topic.id}`)
             }
           ></ActionView>
 
-          <ActionEdit onClick={() => {}}></ActionEdit>
+          {/* <ActionEdit
+            onClick={() => {
+              navigate(`/BaseConfirmationLecturerEdit?id=${topic.id}`);
+            }}
+          ></ActionEdit> */}
 
-          <ActionDelete onClick={() => {}}></ActionDelete>
+          <ActionDelete
+            onClick={() => handleDeledeConfirmation(topic)}
+          ></ActionDelete>
         </div>
       </td>
     </tr>
@@ -98,7 +135,7 @@ const AppointmentListLecturer = () => {
   return (
     <div className="container">
       <div className="flex justify-end my-5 ">
-        <Button className="" kind="primary" href="/AppointmentAddNew">
+        <Button className="" kind="primary" href="/BaseConfirmationAddNew">
           Tạo mới cuộc hẹn
         </Button>
       </div>
@@ -123,4 +160,4 @@ const AppointmentListLecturer = () => {
   );
 };
 
-export default AppointmentListLecturer;
+export default InternshipAssessmentList;

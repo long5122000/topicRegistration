@@ -16,6 +16,7 @@ import { uid } from "uid";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDocs,
   query,
@@ -43,6 +44,7 @@ const PlanAddNew = () => {
   const [students, setStudents] = useState([]);
   const [lecturers, setLecturers] = useState();
   const [userList, setUserList] = useState<any>([]);
+
   const [topicList, setTopicList] = useState<any>([]);
   const [planList, setPlanList] = useState<any>([]);
   const PlanId = uid();
@@ -105,6 +107,25 @@ const PlanAddNew = () => {
     getData();
   }, []);
   console.log(userList);
+  useEffect(() => {
+    async function getData() {
+      const colRef = collection(db, "Users");
+      const q = query(colRef, where("role", "==", "1"));
+      const querySnapshot = await getDocs(q);
+
+      let result: any = [];
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        result.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+      setStudents(result);
+    }
+    getData();
+  }, []);
+  console.log("st", students);
   useEffect(() => {
     async function getData() {
       const colRef = collection(db, "Topics");
@@ -177,23 +198,8 @@ const PlanAddNew = () => {
   const handleAddNewPlan = async (values: values): Promise<void> => {
     if (!isValid) return;
     try {
-      userList.forEach(async (item: any) => {
-        const docRef = doc(db, "Users", item.id);
-        await updateDoc(docRef, {
-          PlanId: PlanId,
-        });
-      });
-      topicList.forEach(async (item) => {
-        const docRef = doc(db, "Topics", item.id);
-        await updateDoc(docRef, {
-          status: "1",
-        });
-      });
-      planList.forEach(async (item) => {
-        const docRef = doc(db, "Plans", item.id);
-        await updateDoc(docRef, {
-          status: false,
-        });
+      students.forEach(async (item) => {
+        await deleteDoc(doc(db, "Users", item.id));
       });
       data.forEach(async (item) => {
         await addDoc(collection(db, "Users"), {
@@ -209,7 +215,7 @@ const PlanAddNew = () => {
           createdAt: serverTimestamp(),
           avatar: "",
           category: String(item.Category),
-          msv: item.msv,
+          msv: item.Msv,
         });
         await createUserWithEmailAndPassword(
           auth,
@@ -229,6 +235,24 @@ const PlanAddNew = () => {
         status: values.status,
         users: data,
         createdAt: serverTimestamp(),
+      });
+      userList.forEach(async (item: any) => {
+        const docRef = doc(db, "Users", item.id);
+        await updateDoc(docRef, {
+          PlanId: PlanId,
+        });
+      });
+      topicList.forEach(async (item) => {
+        const docRef = doc(db, "Topics", item.id);
+        await updateDoc(docRef, {
+          status: "1",
+        });
+      });
+      planList.forEach(async (item) => {
+        const docRef = doc(db, "Plans", item.id);
+        await updateDoc(docRef, {
+          status: false,
+        });
       });
 
       toast.success(`Create new plan with name: ${values.name} successfully!`);
