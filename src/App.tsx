@@ -71,6 +71,7 @@ import InternshipReportAddNew from "./modules/appointment/InternshipReport/Inter
 import InternshipReportList from "./modules/appointment/InternshipReport/InternshipReportList";
 import InternshipReportDetail from "./modules/appointment/InternshipReport/InternshipReportDetail";
 import InternshipReportLecturerView from "./modules/appointment/InternshipReport/InternshipReportLecturerView";
+import BrowserTopicEdit from "./modules/topic/BrowserTopicEdit";
 
 function App() {
   return (
@@ -117,6 +118,10 @@ function App() {
             <Route
               path="/BrowserTopicView"
               element={<BrowserTopicView></BrowserTopicView>}
+            ></Route>
+            <Route
+              path="/BrowserTopicEdit"
+              element={<BrowserTopicEdit></BrowserTopicEdit>}
             ></Route>
             <Route
               path="/ProgressReports"

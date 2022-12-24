@@ -76,7 +76,7 @@ const InternshipBaseOpinionDetail = () => {
       setComfirmation(result);
     });
   }, [userInfo]);
-  console.log(confirmation);
+  console.log("cv", confirmation);
   useEffect(() => {
     async function getData() {
       const colRef = collection(db, "InternshipBaseOpinionList");

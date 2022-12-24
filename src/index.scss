@@ -52,8 +52,14 @@ body {
   .react-calendar__navigation button:enabled:focus {
     @apply bg-transparent;
   }
-  .react-calendar__tile:not(.react-calendar__tile--active, .react-calendar__tile--now):enabled:hover,
-  .react-calendar__tile:not(.react-calendar__tile--active, .react-calendar__tile--now):enabled:focus {
+  .react-calendar__tile:not(
+      .react-calendar__tile--active,
+      .react-calendar__tile--now
+    ):enabled:hover,
+  .react-calendar__tile:not(
+      .react-calendar__tile--active,
+      .react-calendar__tile--now
+    ):enabled:focus {
     @apply bg-transparent text-primary;
   }
   .react-calendar__tile--active:enabled:hover,
@@ -92,4 +98,7 @@ body {
   .ql-editor.ql-blank::before {
     @apply text-sm not-italic text-text4;
   }
+}
+.chart {
+  height: 250px !important;
 }

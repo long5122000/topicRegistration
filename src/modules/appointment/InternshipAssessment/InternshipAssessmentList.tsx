@@ -135,7 +135,7 @@ const InternshipAssessmentList = () => {
   return (
     <div className="container">
       <div className="flex justify-end my-5 ">
-        <Button className="" kind="primary" href="/BaseConfirmationAddNew">
+        <Button className="" kind="primary" href="/InternShipAssessmentAddNew">
           Tạo mới cuộc hẹn
         </Button>
       </div>

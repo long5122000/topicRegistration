@@ -100,7 +100,9 @@ const BrowserTopicPage = () => {
             onClick={() => navigate(`/BrowserTopicView?id=${topic.id}`)}
           ></ActionView>
 
-          <ActionEdit onClick={() => handleViewTopic(topic)}></ActionEdit>
+          <ActionEdit
+            onClick={() => navigate(`/BrowserTopicEdit?id=${topic.id}`)}
+          ></ActionEdit>
 
           <ActionDelete
             onClick={() => handleDeledeteTopic(topic)}
