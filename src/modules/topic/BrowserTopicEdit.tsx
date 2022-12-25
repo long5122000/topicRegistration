@@ -98,22 +98,7 @@ const BrowserTopicEdit = () => {
   interface values {
     local?: string;
   }
-  const refuseToRegister = async (values: values): Promise<void> => {
-    if (!isValid) {
-      return;
-    }
-    try {
-      const colRef2 = doc(db, "RegisterTopic", topicId);
-      await updateDoc(colRef2, {
-        status: "3",
-      });
-      toast.success("Update user information successfully!");
-    } catch (error) {
-      console.log(error);
-      toast.error("Update user failed!");
-      console.log(error);
-    }
-  };
+
   const handleBrowserTopic = async (values: values): Promise<void> => {
     if (!isValid) {
       return;
@@ -122,6 +107,11 @@ const BrowserTopicEdit = () => {
       const colRef1 = doc(db, "Users", data.userId);
 
       await updateDoc(colRef1, {
+        internshipFacility: values.local,
+      });
+      const colRef2 = doc(db, "RegisterTopic", topicId);
+
+      await updateDoc(colRef2, {
         internshipFacility: values.local,
       });
 
@@ -181,7 +171,7 @@ const BrowserTopicEdit = () => {
             <Label>Cơ sở thực tập</Label>
 
             <Input
-              name="local"
+              name="internshipFacility"
               placeholder="Nhập cơ sở thực tập"
               control={control}
             ></Input>

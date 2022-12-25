@@ -85,6 +85,9 @@ const TopicDetailPage = () => {
         msv: userInfo.msv,
         phone: userInfo.phone,
         createdAt: serverTimestamp(),
+        nameLecturer: data.authName,
+        namePlan: data.plan,
+        nameSection: data.authSection,
       });
       toast.success(`Đã gửi đăng đăng ký đề tài:  ${data.name} successfully!`);
     } catch (error) {

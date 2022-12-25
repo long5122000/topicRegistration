@@ -131,6 +131,11 @@ const BrowserTopicView = () => {
       await updateDoc(colRef3, {
         topicId: data.topicId,
         authEmail: data.authEmail,
+        nameLecturer: data.nameLecturer,
+        nameSection: data.nameSection,
+        namePlan: data.namePlan,
+        nameTopic: data.topicName,
+        mgv: data.mvg,
       });
       toast.success("Update user information successfully!");
     } catch (error) {
@@ -184,6 +189,15 @@ const BrowserTopicView = () => {
           </Field>
         </div>
         <div className="form-layout container mt-5">
+          <Field>
+            <Label>Cơ sở thực tập</Label>
+
+            <Input
+              name="internshipFacility"
+              placeholder="Nhập cơ sở thực tập"
+              control={control}
+            ></Input>
+          </Field>
           <Field>
             <Label>Thể loại đăng ký</Label>
 

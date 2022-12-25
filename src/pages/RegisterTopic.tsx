@@ -129,6 +129,8 @@ const RegisterTopic = () => {
         auth: userInfo.uid,
         authName: userInfo.fullname,
         authEmail: userInfo.email,
+        authSection: userInfo.section,
+        mgv: userInfo.mgv,
         createdAt: serverTimestamp(),
       });
       toast.success("Gửi đơn đề xuất đề tài thành công!");

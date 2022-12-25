@@ -72,6 +72,7 @@ import InternshipReportList from "./modules/appointment/InternshipReport/Interns
 import InternshipReportDetail from "./modules/appointment/InternshipReport/InternshipReportDetail";
 import InternshipReportLecturerView from "./modules/appointment/InternshipReport/InternshipReportLecturerView";
 import BrowserTopicEdit from "./modules/topic/BrowserTopicEdit";
+import DetailList from "./modules/dashboard/DetailList";
 
 function App() {
   return (
@@ -271,6 +272,10 @@ function App() {
             <Route
               path="/manage/user"
               element={<UserManage></UserManage>}
+            ></Route>
+            <Route
+              path="/manage/DetailList"
+              element={<DetailList></DetailList>}
             ></Route>
             <Route
               path="/manage/ListStudent"

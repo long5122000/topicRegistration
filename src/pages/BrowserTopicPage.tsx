@@ -92,7 +92,7 @@ const BrowserTopicPage = () => {
       <td>
         {new Date(topic?.createdAt?.seconds * 1000).toLocaleDateString("vi-VI")}
       </td>
-      <td>{topic?.company || "Chưa có dữ liệu"}</td>
+      <td>{topic?.internshipFacility || "Chưa có dữ liệu"}</td>
       <td>{renderUserStatus(topic?.status)}</td>
       <td>
         <div className="flex items-center gap-x-3 text-gray-500">

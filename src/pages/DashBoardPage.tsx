@@ -4,6 +4,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut, Pie } from "react-chartjs-2";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase-app/firebase-config";
+import Button from "../components/button/Button";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 const DashBoardPage = () => {
@@ -211,6 +212,12 @@ const DashBoardPage = () => {
           <h2 className="item-center text-center text-3xl font-bold mt-5">
             {planList[0]?.name}
           </h2>
+          <div className="flex justify-end mb-10 ">
+            <Button className="" kind="primary" href="/manage/DetailList">
+              Xem danh sách chi tiết
+            </Button>
+          </div>
+
           <div className="flex justify-around mt-10">
             <div className="bg-blue-800 rounded-xl w-80">
               <div className="text-white p-5">
