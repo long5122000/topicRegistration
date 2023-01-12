@@ -66,7 +66,7 @@ const InternshipOutlineAddNew = () => {
     const colRef = collection(db, "InternshipOutlines");
     try {
       await addDoc(colRef, {
-        name: "Nộp phiếu đề cương thực tập",
+        name: "Nộp đề cương thực tập",
         desc: content,
         startDate: startDate,
         endDate: endDate,
@@ -94,9 +94,7 @@ const InternshipOutlineAddNew = () => {
           <Field>
             <Label>
               Tên cuộc hẹn :{" "}
-              <h3 className="text-xl text-red-400">
-                Nộp phiếu đề cương thực tập
-              </h3>
+              <h3 className="text-xl text-red-400">Nộp đề cương thực tập</h3>
             </Label>
           </Field>
           <Field>

@@ -97,15 +97,13 @@ const AdminAddNewExcel = () => {
           pres?.Email ?? "",
           pres?.Password ?? ""
         );
-        toast.success(
-          `Create new user with email: ${pres.Email} successfully!`
-        );
+        toast.success(`Tạo mới người dùng: ${pres.Email} thành công!`);
         console.log(pres.Name);
       } catch (error: any) {
         if (error.code == "auth/email-already-in-use") {
           toast.error(`Địa chỉ email:  ${pres.Email} đã được sử dụng`);
         } else {
-          toast.error("Can not create new user");
+          toast.error("Không thể tạo mới người dùng");
         }
       }
     });

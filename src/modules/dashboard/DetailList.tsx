@@ -55,7 +55,7 @@ const DetailList = () => {
       <td className="p-2" title={user?.class}>
         {user?.class}
       </td>
-      <td className="p-2 whitespace-normal " title={user?.nameTopic}>
+      <td className="p-1 whitespace-normal w-[150px]" title={user?.nameTopic}>
         {user?.nameTopic}
       </td>
       <td className="p-2">{user?.nameLecturer}</td>
@@ -66,7 +66,7 @@ const DetailList = () => {
   );
   return (
     <div>
-      <Pdf targetRef={ref} filename="code-example.pdf" scale={0.74}>
+      <Pdf targetRef={ref} filename="code-example.pdf" scale={0.7}>
         {({ toPdf }) => (
           <Button
             kind="primary"
@@ -79,7 +79,7 @@ const DetailList = () => {
         )}
       </Pdf>
       <div ref={ref}>
-        <div className="flex justify-between">
+        <div className="flex justify-around">
           <div>
             <h3 className="text-center">HỌC VIỆN NÔNG NGHIỆP VIỆT NAM</h3>
             <p className="text-center font-bold">KHOA CÔNG NGHỆ THÔNG TIN</p>
@@ -104,7 +104,7 @@ const DetailList = () => {
               <th className="p-2">Mã SV </th>
               <th className="p-2">Lớp</th>
               <th className="p-2">Tên đề tài</th>
-              <th className="p-2">Giảng viên hướng dẫn</th>
+              <th className="p-2">Gv hướng dẫn</th>
               <th className="p-2">Mã GV</th>
               <th className="p-2">Bộ môn quản lý </th>
               <th className="p-2">Cơ sở thực tập</th>

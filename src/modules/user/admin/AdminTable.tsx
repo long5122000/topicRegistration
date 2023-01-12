@@ -23,22 +23,18 @@ const AdminTable = () => {
   const [userList, setUserList] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
-    async function getData() {
-      const colRef = collection(db, "Users");
-      const q = query(colRef, where("role", "==", "3"));
-      const querySnapshot = await getDocs(q);
-      let result: any = [];
-      querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
+    const colRef = collection(db, "Users");
+    const q = query(colRef, where("role", "==", "3"));
+    onSnapshot(q, (snapshot) => {
+      const result: any = [];
+      snapshot.forEach((doc) => {
         result.push({
           id: doc.id,
           ...doc.data(),
         });
       });
-
       setUserList(result);
-    }
-    getData();
+    });
   }, []);
   console.log(userList);
 

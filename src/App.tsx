@@ -45,9 +45,7 @@ import BrowserTopicView from "./modules/topic/BrowserTopicView";
 import ProgressReportsPage from "./pages/ProgressReportsPage";
 import AppointmentAddNew from "./modules/appointment/AppointmentAddNew";
 import AppointmentDetailPage from "./pages/AppointmentDetailPage";
-import AppointmentListLecturer from "./modules/appointment/AppointmentListLecturer";
-import AppointmentView from "./modules/appointment/AppointmentView";
-import AppointmentListLecturerView from "./modules/appointment/AppointmentListLecturerView";
+
 import AppointmentManage from "./modules/appointment/AppointmentManage";
 import BaseConfirmationList from "./modules/appointment/BaseConfirmation/BaseConfirmationList";
 import BaseConfirmationAddNew from "./modules/appointment/BaseConfirmation/BaseConfirmationAddNew";
@@ -73,6 +71,10 @@ import InternshipReportDetail from "./modules/appointment/InternshipReport/Inter
 import InternshipReportLecturerView from "./modules/appointment/InternshipReport/InternshipReportLecturerView";
 import BrowserTopicEdit from "./modules/topic/BrowserTopicEdit";
 import DetailList from "./modules/dashboard/DetailList";
+import AppointmentView from "./modules/appointment/AppointmentView";
+import AppointmentListAdmin from "./modules/appointment/AppointmentListAdmin";
+import AppointmentEdit from "./modules/appointment/AppointmentEdit";
+import AppointmentListUser from "./modules/appointment/AppointMentListUser";
 
 function App() {
   return (
@@ -128,36 +130,16 @@ function App() {
               path="/ProgressReports"
               element={<ProgressReportsPage></ProgressReportsPage>}
             ></Route>
-            <Route
-              path="/AppointmentAddNew"
-              element={<AppointmentAddNew></AppointmentAddNew>}
-            ></Route>
+
             <Route
               path="/AppointmentManage"
               element={<AppointmentManage></AppointmentManage>}
             ></Route>
             <Route
               path="/AppointmentList"
-              element={<AppointmentList></AppointmentList>}
+              element={<AppointmentListUser></AppointmentListUser>}
             ></Route>
-            <Route
-              path="/AppointmentListLecturer"
-              element={<AppointmentListLecturer></AppointmentListLecturer>}
-            ></Route>
-            <Route
-              path="/AppointmentListLecturerView"
-              element={
-                <AppointmentListLecturerView></AppointmentListLecturerView>
-              }
-            ></Route>
-            <Route
-              path="/AppointmentDetail"
-              element={<AppointmentDetailPage></AppointmentDetailPage>}
-            ></Route>
-            <Route
-              path="/AppointmentView"
-              element={<AppointmentView></AppointmentView>}
-            ></Route>
+
             <Route
               path="/BaseConfirmationList"
               element={<BaseConfirmationList></BaseConfirmationList>}
@@ -262,6 +244,10 @@ function App() {
                 <InternshipReportLecturerView></InternshipReportLecturerView>
               }
             ></Route>
+            <Route
+              path="/AppointmentDetail"
+              element={<AppointmentDetailPage></AppointmentDetailPage>}
+            ></Route>
           </Route>
           <Route element={<DashBoardLayout></DashBoardLayout>}>
             <Route
@@ -349,6 +335,23 @@ function App() {
             <Route
               path="/manage/TopicUpdate"
               element={<TopicUpdate></TopicUpdate>}
+            ></Route>
+            <Route
+              path="/manage/AppointmentAddNew"
+              element={<AppointmentAddNew></AppointmentAddNew>}
+            ></Route>
+            <Route
+              path="/manage/AppointmentListAdmin"
+              element={<AppointmentListAdmin></AppointmentListAdmin>}
+            ></Route>
+
+            <Route
+              path="/manage/AppointmentView"
+              element={<AppointmentView></AppointmentView>}
+            ></Route>
+            <Route
+              path="/manage/AppointmentEdit"
+              element={<AppointmentEdit></AppointmentEdit>}
             ></Route>
           </Route>
         </Routes>

@@ -23,22 +23,18 @@ const LecturersTable = () => {
   const [userList, setUserList] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
-    async function getData() {
-      const colRef = collection(db, "Users");
-      const q = query(colRef, where("role", "==", "2"));
-      const querySnapshot = await getDocs(q);
-      let result: any = [];
-      querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
+    const colRef = collection(db, "Users");
+    const q = query(colRef, where("role", "==", "2"));
+    onSnapshot(q, (snapshot) => {
+      const result: any = [];
+      snapshot.forEach((doc) => {
         result.push({
           id: doc.id,
           ...doc.data(),
         });
       });
-
       setUserList(result);
-    }
-    getData();
+    });
   }, []);
   console.log(userList);
 
@@ -136,13 +132,13 @@ const LecturersTable = () => {
       <Table>
         <thead>
           <tr>
-            <th>Id</th>
+            <th>Mgv</th>
             <th>Tên </th>
             <th>Email </th>
             <th>Mật khẩu</th>
             <th>Bộ môn</th>
             <th>Giới tính</th>
-            <th>Sinh nhật</th>
+            <th>Số điện thoại</th>
             <th>Trạng thái </th>
             <th>Actions</th>
           </tr>

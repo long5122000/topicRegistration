@@ -1,33 +1,29 @@
-import { collection, onSnapshot, query, where } from "firebase/firestore";
-import React, { useCallback, useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  query,
+} from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import ActionDelete from "../../components/actions/ActionDelete";
 import ActionEdit from "../../components/actions/ActionEdit";
 import ActionView from "../../components/actions/ActionView";
 import Button from "../../components/button/Button";
-import LabelStatus from "../../components/label/LabelStatus";
 import Table from "../../components/table/Table";
 import { useAuth } from "../../context/auth-context";
 import { db } from "../../firebase-app/firebase-config";
-import ModalImage from "react-modal-image";
 
-const AppointmentListLecturer = () => {
+const AppointmentListAdmin = () => {
   const { userInfo } = useAuth();
   const navigate = useNavigate();
   const [appointmentList, setAppointmentList] = useState([]);
-  const [isViewerOpen, setIsViewerOpen] = useState(false);
-  const openImageViewer = useCallback((index) => {
-    setIsViewerOpen(true);
-  }, []);
-
-  const closeImageViewer = () => {
-    setIsViewerOpen(false);
-  };
-
   useEffect(() => {
     const colRef = collection(db, "Appointments");
-    const q = query(colRef, where("emailLectured", "==", userInfo.email));
-    onSnapshot(q, (snapshot) => {
+    onSnapshot(colRef, (snapshot) => {
       const result: any = [];
       snapshot.forEach((doc) => {
         result.push({
@@ -38,29 +34,27 @@ const AppointmentListLecturer = () => {
       setAppointmentList(result);
     });
   }, []);
-  const imageUrl = userInfo.appointmentImage;
-
-  const imageRegex: any = /%2F(\S+)\?/gm.exec(imageUrl);
-  const imageName: any = imageRegex?.length > 0 ? imageRegex[1] : "";
-  console.log(appointmentList);
-  const renderUserStatus = (status: any) => {
-    switch (status) {
-      case true:
-        return (
-          <LabelStatus className="" type="success">
-            Đang diễn ra
-          </LabelStatus>
-        );
-      case false:
-        return (
-          <LabelStatus className="" type="danger">
-            Đã kết thúc
-          </LabelStatus>
-        );
-
-      default:
-        break;
-    }
+  const handleDeledeConfirmation = async (item: any) => {
+    // if (userInfo?.Role !== userRole.ADMIN) {
+    //   Swal.fire("Failed", "You have no right to do this action", "warning");
+    //   return;
+    // }
+    const colRef = doc(db, "Appointments", item.id);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result: any) => {
+      if (result.isConfirmed) {
+        await deleteDoc(colRef);
+        toast.success("Xóa cuộc hẹn thành công ");
+        Swal.fire("Deleted!", "Your file has been deleted.", "success");
+      }
+    });
   };
   const renderPlanItem = (topic: any) => (
     <tr key={topic.id}>
@@ -71,26 +65,22 @@ const AppointmentListLecturer = () => {
       <td>
         {new Date(topic?.createdAt?.seconds * 1000).toLocaleDateString("vi-VI")}
       </td>
-      <td>
-        {topic?.endDate?.seconds * 1000 - Date.now() > 0
-          ? "Đang diễn ra"
-          : " Đã kết thúc"}
-      </td>
+      <td>{topic?.status ? "Hoạt động" : " Không hoạt động"}</td>
       {/* <td>
         <ModalImage small={topic.image} large={topic.image} />
       </td> */}
       {/* <td>{renderUserStatus(topic?.status)}</td> */}
       <td>
         <div className="flex items-center gap-x-3 text-gray-500">
-          <ActionView
-            onClick={() =>
-              navigate(`/AppointmentListLecturerView?id=${topic.id}`)
-            }
-          ></ActionView>
+          <ActionEdit
+            onClick={() => {
+              navigate(`/manage/AppointmentEdit?id=${topic.id}`);
+            }}
+          ></ActionEdit>
 
-          <ActionEdit onClick={() => {}}></ActionEdit>
-
-          <ActionDelete onClick={() => {}}></ActionDelete>
+          <ActionDelete
+            onClick={() => handleDeledeConfirmation(topic)}
+          ></ActionDelete>
         </div>
       </td>
     </tr>
@@ -98,15 +88,15 @@ const AppointmentListLecturer = () => {
   return (
     <div className="container">
       <div className="flex justify-end my-5 ">
-        <Button className="" kind="primary" href="/AppointmentAddNew">
-          Tạo mới cuộc hẹn
+        <Button className="" kind="primary" href="/manage/AppointmentAddNew">
+          Tạo mới tin tức
         </Button>
       </div>
       <Table>
         <thead>
           <tr>
             <th>Id</th>
-            <th>Tên cuộc hẹn </th>
+            <th>Tên tin tức </th>
             {/* <th>Mã sinh viên </th>
             <th>Tên sinh viên </th> */}
             <th>Ngày tạo</th>
@@ -123,4 +113,4 @@ const AppointmentListLecturer = () => {
   );
 };
 
-export default AppointmentListLecturer;
+export default AppointmentListAdmin;

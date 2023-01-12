@@ -83,10 +83,10 @@ const LecturersUpdate = () => {
         role: "2",
         createdAt: serverTimestamp(),
       });
-      toast.success("Update user information successfully!");
+      toast.success("Chỉnh sửa người dùng thành công!");
     } catch (error) {
       console.log(error);
-      toast.error("Update user failed!");
+      toast.error("Chỉnh sửa người dùng thất bại!");
       console.log(error);
     }
   };

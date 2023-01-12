@@ -11,13 +11,9 @@ const AppointmentList = () => {
   console.log(userInfo);
 
   const [appointments, setAppointments] = useState([]);
-  const [internship, setInternShip] = useState([]);
-  const [internoutline, setInternOutline] = useState([]);
-  const [internopinion, setInternopinion] = useState([]);
-  const [internreport, setInternreport] = useState([]);
   useEffect(() => {
-    const colRef = collection(db, "BaseConfirmations");
-    const q = query(colRef, where("emailLectured", "==", userInfo.authEmail));
+    const colRef = collection(db, "Appointments");
+    const q = query(colRef, where("status", "==", true));
     onSnapshot(q, (snapshot) => {
       const result: any = [];
       snapshot.forEach((doc) => {
@@ -29,151 +25,28 @@ const AppointmentList = () => {
       setAppointments(result);
     });
   }, [userInfo]);
-  useEffect(() => {
-    const colRef = collection(db, "InternshipAssessments");
-    const q = query(colRef, where("emailLectured", "==", userInfo.authEmail));
-    onSnapshot(q, (snapshot) => {
-      const result: any = [];
-      snapshot.forEach((doc) => {
-        result.push({
-          id: doc.id,
-          ...doc.data(),
-        });
-      });
-      setInternShip(result);
-    });
-  }, [userInfo]);
-  useEffect(() => {
-    const colRef = collection(db, "InternshipOutlines");
-    const q = query(colRef, where("emailLectured", "==", userInfo.authEmail));
-    onSnapshot(q, (snapshot) => {
-      const result: any = [];
-      snapshot.forEach((doc) => {
-        result.push({
-          id: doc.id,
-          ...doc.data(),
-        });
-      });
-      setInternOutline(result);
-    });
-  }, [userInfo]);
-  useEffect(() => {
-    const colRef = collection(db, "InternshipBaseOpinions");
-    const q = query(colRef, where("emailLectured", "==", userInfo.authEmail));
-    onSnapshot(q, (snapshot) => {
-      const result: any = [];
-      snapshot.forEach((doc) => {
-        result.push({
-          id: doc.id,
-          ...doc.data(),
-        });
-      });
-      setInternopinion(result);
-    });
-  }, [userInfo]);
-  useEffect(() => {
-    const colRef = collection(db, "InternshipReports");
-    const q = query(colRef, where("emailLectured", "==", userInfo.authEmail));
-    onSnapshot(q, (snapshot) => {
-      const result: any = [];
-      snapshot.forEach((doc) => {
-        result.push({
-          id: doc.id,
-          ...doc.data(),
-        });
-      });
-      setInternreport(result);
-    });
-  }, [userInfo]);
+  console.log(appointments);
 
-  const renderPlanItem = (topic: any) => (
-    <tr key={topic.id}>
-      <td title={topic.id}>{topic.id.slice(0, 5) + "..."}</td>
-      <td>
-        <Link to={`/BaseConfirmationDetail?id=${topic.id}`}>{topic?.name}</Link>
-      </td>
-      <td>
-        {new Date(topic?.createdAt?.seconds * 1000).toLocaleDateString("vi-VI")}
-      </td>
-    </tr>
-  );
-  const renderOpinionItem = (topic: any) => (
-    <tr key={topic.id}>
-      <td title={topic.id}>{topic.id.slice(0, 5) + "..."}</td>
-      <td>
-        <Link to={`/InternshipBaseOpinitonDetail?id=${topic.id}`}>
-          {topic?.name}
-        </Link>
-      </td>
-      <td>
-        {new Date(topic?.createdAt?.seconds * 1000).toLocaleDateString("vi-VI")}
-      </td>
-    </tr>
-  );
-  const renderInternItem = (topic: any) => (
-    <tr key={topic.id}>
-      <td title={topic.id}>{topic.id.slice(0, 5) + "..."}</td>
-      <td>
-        <Link to={`/InternshipAssessmentDetail?id=${topic.id}`}>
-          {topic?.name}
-        </Link>
-      </td>
-      <td>
-        {new Date(topic?.createdAt?.seconds * 1000).toLocaleDateString("vi-VI")}
-      </td>
-    </tr>
-  );
-  const renderOutlineItem = (topic: any) => (
-    <tr key={topic.id}>
-      <td title={topic.id}>{topic.id.slice(0, 5) + "..."}</td>
-      <td>
-        <Link to={`/InternshipOutlineDetail?id=${topic.id}`}>
-          {topic?.name}
-        </Link>
-      </td>
-      <td>
-        {new Date(topic?.createdAt?.seconds * 1000).toLocaleDateString("vi-VI")}
-      </td>
-    </tr>
-  );
-  const renderReportItem = (topic: any) => (
-    <tr key={topic.id}>
-      <td title={topic.id}>{topic.id.slice(0, 5) + "..."}</td>
-      <td>
-        <Link to={`/InternshipReportDetail?id=${topic.id}`}>{topic?.name}</Link>
-      </td>
-      <td>
-        {new Date(topic?.createdAt?.seconds * 1000).toLocaleDateString("vi-VI")}
-      </td>
-    </tr>
-  );
   return (
-    <div className="container">
-      <Heading>Danh sách cuộc hẹn</Heading>
-      <Table>
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Tên cuộc hẹn </th>
-            <th>Ngày tạo</th>
-          </tr>
-        </thead>
-        <tbody>
-          {appointments.length > 0 && appointments.map(renderPlanItem)}
-        </tbody>
-        <tbody>
-          {internship.length > 0 && internship.map(renderInternItem)}
-        </tbody>
-        <tbody>
-          {internopinion.length > 0 && internopinion.map(renderOpinionItem)}
-        </tbody>
-        <tbody>
-          {internoutline.length > 0 && internoutline.map(renderOutlineItem)}
-        </tbody>
-        <tbody>
-          {internreport.length > 0 && internreport.map(renderReportItem)}
-        </tbody>
-      </Table>
+    <div className=" flex flex-col">
+      {appointments.length > 0 &&
+        appointments.map((item) => (
+          <div className="border-b-2 py-3">
+            <Link
+              to={`/AppointmentDetail?id=${item.id}`}
+              className="text pl-3 "
+            >
+              {item.name}
+              <span className="text-[#8b8b8b] text-xs pl-5">
+                (
+                {new Date(item?.createdAt?.seconds * 1000).toLocaleDateString(
+                  "vi-VI"
+                )}
+                )
+              </span>
+            </Link>
+          </div>
+        ))}
     </div>
   );
 };

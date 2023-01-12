@@ -255,7 +255,7 @@ const PlanAddNew = () => {
         });
       });
 
-      toast.success(`Create new plan with name: ${values.name} successfully!`);
+      toast.success(`Tạo mới kế hoạch: ${values.name} thành công!`);
       // reset({
       //   name: "",
       //   status: true,
@@ -264,7 +264,7 @@ const PlanAddNew = () => {
     } catch (error: any) {
       console.log(error);
 
-      toast.error("Can not create new plan");
+      toast.error("Không thể tạo mới kế hoạch");
     }
   };
 

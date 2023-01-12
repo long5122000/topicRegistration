@@ -103,7 +103,7 @@ const ProposedTopicView = () => {
             <Input
               disabled
               type="number"
-              name="quantity"
+              name="totalQuantity"
               min={1}
               control={control}
             ></Input>{" "}

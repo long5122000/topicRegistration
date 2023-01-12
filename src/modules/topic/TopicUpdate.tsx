@@ -43,7 +43,7 @@ const TopicUpdate = () => {
   const schema = yup
     .object({
       name: yup.string().required("Vui lòng nhập tên đề tài"),
-      quantity: yup
+      totalQuantity: yup
         .number()
         .transform((value) => (isNaN(value) ? undefined : value))
         .nullable()
@@ -71,7 +71,7 @@ const TopicUpdate = () => {
     mode: "onChange",
     resolver: yupResolver(schema),
     defaultValues: {
-      quantity: 1,
+      totalQuantity: 1,
       name: "",
       desc: "",
       category: "1",
@@ -143,14 +143,14 @@ const TopicUpdate = () => {
         status: values.status,
         category: values.category,
         plan: selectPlan.plan,
-        quantity: values.quantity,
+        totalQuantity: values.totalQuantity,
         desc: content,
         createdAt: serverTimestamp(),
       });
-      toast.success("Update user information successfully!");
+      toast.success("Chỉnh sửa đề tài thành công!");
     } catch (error) {
       console.log(error);
-      toast.error("Update user failed!");
+      toast.error("Chỉnh sửa đề tài không thành công!");
       console.log(error);
     }
   };
@@ -282,7 +282,7 @@ const TopicUpdate = () => {
             <Label>Số lượng sinh viên</Label>
             <Input
               type="number"
-              name="quantity"
+              name="totalQuantity"
               min={1}
               control={control}
             ></Input>{" "}

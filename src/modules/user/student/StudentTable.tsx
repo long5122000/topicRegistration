@@ -22,24 +22,7 @@ const StudentTable = () => {
   const { userInfo } = useAuth();
   const [userList, setUserList] = useState([]);
   const navigate = useNavigate();
-  // useEffect(() => {
-  //   async function getData() {
-  //     const colRef = collection(db, "Users");
-  //     const q = query(colRef, where("role", "==", "1"));
-  //     const querySnapshot = await getDocs(q);
-  //     let result: any = [];
-  //     querySnapshot.forEach((doc) => {
-  //       // doc.data() is never undefined for query doc snapshots
-  //       result.push({
-  //         id: doc.id,
-  //         ...doc.data(),
-  //       });
-  //     });
 
-  //     setUserList(result);
-  //   }
-  //   getData();
-  // }, []);
   useEffect(() => {
     const colRef = collection(db, "Users");
     const q = query(colRef, where("role", "==", "1"));

@@ -81,6 +81,7 @@ const BrowserTopicView = () => {
     changePage(1);
   }
   const watchCategory = watch("category");
+
   useEffect(() => {
     async function fetchData() {
       if (!topicId) return;
@@ -119,9 +120,8 @@ const BrowserTopicView = () => {
     }
     try {
       const colRef1 = doc(db, "Topics", data.topicId);
-
       await updateDoc(colRef1, {
-        quantity: data.quantity - 1,
+        totalQuantity: data.totalQuantity - 1,
       });
       const colRef2 = doc(db, "RegisterTopic", topicId);
       await updateDoc(colRef2, {
@@ -135,12 +135,12 @@ const BrowserTopicView = () => {
         nameSection: data.nameSection,
         namePlan: data.namePlan,
         nameTopic: data.topicName,
-        mgv: data.mvg,
+        mgv: data.mgv,
       });
-      toast.success("Update user information successfully!");
+      toast.success("Duyệt đề tài thành công!");
     } catch (error) {
       console.log(error);
-      toast.error("Update user failed!");
+      toast.error("Duyệt đề tài không thành công!");
       console.log(error);
     }
   };

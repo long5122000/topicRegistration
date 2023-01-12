@@ -94,9 +94,9 @@ const TopicPage = () => {
             <div className="container">
               <div className="container flex justify-between">
                 <p>Khóa luận tốt nghiệp</p>
-                <Dropdown>
-                  <Select placeholder="Lọc theo giảng viên"></Select>
-                  {/* <List>
+                {/* <Dropdown> */}
+                {/* <Select placeholder="Lọc theo giảng viên"></Select> */}
+                {/* <List>
                     {brands.length > 0 &&
                       brands.map((item) => (
                         <Option
@@ -107,7 +107,7 @@ const TopicPage = () => {
                         </Option>
                       ))}
                   </List> */}
-                </Dropdown>
+                {/* </Dropdown> */}
               </div>
 
               <Table>
@@ -132,8 +132,8 @@ const TopicPage = () => {
                         </td>
 
                         <td>{topic.authName}</td>
-                        <td>{topic.quantity}</td>
-                        {topic.quantity <= 0 ? (
+                        <td>{topic.totalQuantity}</td>
+                        {topic.totalQuantity <= 0 ? (
                           <td>Đã hết</td>
                         ) : (
                           <td>Hiện còn</td>
@@ -148,9 +148,9 @@ const TopicPage = () => {
             <div className="container">
               <div className="container flex justify-between">
                 <p>Thực tập chuyên ngành</p>
-                <Dropdown>
-                  <Select placeholder="Lọc theo giảng viên"></Select>
-                  {/* <List>
+                {/* <Dropdown>
+                  <Select placeholder="Lọc theo giảng viên"></Select> */}
+                {/* <List>
                     {brands.length > 0 &&
                       brands.map((item) => (
                         <Option
@@ -161,7 +161,7 @@ const TopicPage = () => {
                         </Option>
                       ))}
                   </List> */}
-                </Dropdown>
+                {/* </Dropdown> */}
               </div>
               <Table>
                 <thead>
@@ -185,8 +185,8 @@ const TopicPage = () => {
                         </td>
 
                         <td>{topic.authName}</td>
-                        <td>{topic.quantity}</td>
-                        {topic.quantity <= 0 ? (
+                        <td>{topic.totalQuantity}</td>
+                        {topic.totalQuantity <= 0 ? (
                           <td>Đã hết</td>
                         ) : (
                           <td>Hiện còn</td>

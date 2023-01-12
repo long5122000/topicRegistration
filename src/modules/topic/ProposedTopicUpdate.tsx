@@ -43,7 +43,7 @@ const ProposedTopicUpdate = () => {
   const schema = yup
     .object({
       name: yup.string().required("Vui lòng nhập tên đề tài"),
-      quantity: yup
+      totalQuantity: yup
         .number()
         .transform((value) => (isNaN(value) ? undefined : value))
         .nullable()
@@ -143,14 +143,14 @@ const ProposedTopicUpdate = () => {
         status: "1",
         category: values.category,
         plan: selectPlan.plan,
-        quantity: values.quantity,
+        totalQuantity: values.totalQuantity,
         desc: content,
         createdAt: serverTimestamp(),
       });
-      toast.success("Update user information successfully!");
+      toast.success("Đề xuất đề tài thành công!");
     } catch (error) {
       console.log(error);
-      toast.error("Update user failed!");
+      toast.error("Đề xuất đề tài không thành công!");
       console.log(error);
     }
   };
@@ -254,11 +254,13 @@ const ProposedTopicUpdate = () => {
             <Label>Số lượng sinh viên</Label>
             <Input
               type="number"
-              name="quantity"
+              name="totalQuantity"
               min={1}
               control={control}
             ></Input>{" "}
-            <p className="text-[#de3131] text-sm">{errors.quantity?.message}</p>
+            <p className="text-[#de3131] text-sm">
+              {errors.totalQuantity?.message}
+            </p>
           </Field>
         </div>
         <Button

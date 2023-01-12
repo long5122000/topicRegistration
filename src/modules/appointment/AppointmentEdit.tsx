@@ -1,22 +1,23 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
+import ReactQuill from "react-quill";
 import { useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import Button from "../../components/button/Button";
-import ExcelUpload from "../../components/excel/ExcelUpload";
 import Field from "../../components/field/Field";
 import Input from "../../components/input/Input";
 import Label from "../../components/label/Label";
-import Table from "../../components/table/Table";
 import Toggle from "../../components/toggle/Toggle";
 import { db } from "../../firebase-app/firebase-config";
 import * as yup from "yup";
-import { toast } from "react-toastify";
-const PlanUpdate = () => {
+import Heading from "../../layout/Heading";
+const AppointmentEdit = () => {
   const schema = yup.object({
-    name: yup.string().required("Vui lòng nhập họ và tên"),
+    name: yup.string().required("Vui lòng nhập tên"),
   });
+  const [content, setContent] = React.useState("");
   const {
     control,
     handleSubmit,
@@ -31,6 +32,7 @@ const PlanUpdate = () => {
     defaultValues: {
       name: "",
       status: false,
+      desc: "",
       createdAt: new Date(),
     },
   });
@@ -41,33 +43,49 @@ const PlanUpdate = () => {
   interface values {
     name?: string;
     status?: boolean;
+    desc?: string;
   }
   const handleUpdatePlan = async (values: values): Promise<void> => {
     if (!isValid) return;
     try {
-      const colRef = doc(db, "Plans", planId);
+      const colRef = doc(db, "Appointments", planId);
       await updateDoc(colRef, {
         ...values,
         name: values.name,
+        desc: content,
         status: values.status,
         createdAt: serverTimestamp(),
       });
-      toast.success("Cập nhập kế hoạch thành công!");
+      toast.success("Cập nhập cuộc hẹn thành công!");
     } catch (error) {
       console.log(error);
-      toast.error("Cập nhập kế hoạch thất bại!");
+      toast.error("Cập nhập cuộc hẹn thất bại!");
       console.log(error);
     }
   };
   useEffect(() => {
     async function fetchData() {
       if (!planId) return;
-      const colRef = doc(db, "Plans", planId);
+      const colRef = doc(db, "Appointments", planId);
       const docData = await getDoc(colRef);
       reset(docData && docData.data());
+      setContent(docData.data().desc);
     }
     fetchData();
   }, [planId, reset]);
+  const modules = useMemo(
+    () => ({
+      toolbar: [
+        ["bold", "italic", "underline", "strike"],
+        ["blockquote"],
+        [{ header: 1 }, { header: 2 }], // custom button values
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        ["link", "image"],
+      ],
+    }),
+    []
+  );
   return (
     <div>
       <div className="bg-white">
@@ -90,69 +108,23 @@ const PlanUpdate = () => {
               ></Toggle>
             </Field>
           </div>
-          {/* <div className="form-layout container">
+          <div className="form-layout container mt-5">
             <Field>
-              <Label>Nhập file</Label>
-              <div className="w-[350px] h-[200px] mx-auto rounded-full mb-10 mt-5 ">
-                <ExcelUpload
-                  name=""
-                  file={fileName}
-                  className={fileName ? "border-green-500" : "border-red-500"}
-                  onChange={(e) => handleFile(e)}
-                  handleRemoveFile={handleRemoveFile}
-                  ref={fileRef}
-                ></ExcelUpload>
-              </div>
+              <Label>Mô tả</Label>
+              {/* <Textarea
+              control={control}
+              placeholder="Enter your desc"
+              name="desc"
+            ></Textarea> */}
+              <ReactQuill
+                placeholder="Write your story......"
+                modules={modules}
+                theme="snow"
+                value={content}
+                onChange={setContent}
+              />
             </Field>
           </div>
-          <div className="form-layout container">
-            <Field>
-              <Label>Giảng viên</Label>
-              <Table>
-                <thead>
-                  <tr>
-                    <th>Họ tên</th>
-                    <th>Bộ môn</th>
-                    <th>Email</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data1 &&
-                    data1.map((pres) => (
-                      <tr>
-                        <td>{pres.Name}</td>
-                        <td>{pres?.Section}</td>
-                        <td>{pres?.Email}</td>
-                      </tr>
-                    ))}
-                </tbody>
-              </Table>
-            </Field>
-          </div>
-          <div className="form-layout container">
-            <Field>
-              <Label>Sinh viên</Label>
-              <Table>
-                <thead>
-                  <tr>
-                    <th>Họ tên</th>
-                    <th>Mã Sv</th>
-                    <th>Lớp</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data2 &&
-                    data2.map((pres) => (
-                      <tr>
-                        <td>{pres.Name}</td>
-                        <td>{pres?.Email}</td>
-                        <td>{pres?.Classes}</td>
-                      </tr>
-                    ))}
-                </tbody>
-              </Table>
-            </Field>
-          </div> */}
           <Button
             kind="primary"
             type="submit"
@@ -160,7 +132,7 @@ const PlanUpdate = () => {
             isLoading={isSubmitting}
             disabled={isSubmitting}
           >
-            Update plan
+            Thêm cuộc hẹn
           </Button>
         </form>
       </div>
@@ -168,4 +140,4 @@ const PlanUpdate = () => {
   );
 };
 
-export default PlanUpdate;
+export default AppointmentEdit;

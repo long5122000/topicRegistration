@@ -42,7 +42,7 @@ const RegisterTopic = () => {
   const schema = yup
     .object({
       name: yup.string().required("Vui lòng nhập tên đề tài"),
-      quantity: yup
+      totalQuantity: yup
         .number()
         .transform((value) => (isNaN(value) ? undefined : value))
         .nullable()
@@ -70,7 +70,7 @@ const RegisterTopic = () => {
     mode: "onChange",
     resolver: yupResolver(schema),
     defaultValues: {
-      quantity: 1,
+      totalQuantity: 1,
       name: "",
       desc: "",
       category: "1",
@@ -85,7 +85,11 @@ const RegisterTopic = () => {
   useEffect(() => {
     async function getData() {
       const colRef = collection(db, "Plans");
-      const q = query(colRef, where("IdPlan", "==", userInfo.PlanId));
+      const q = query(
+        colRef,
+        where("IdPlan", "==", userInfo.PlanId),
+        where("status", "==", true)
+      );
       const querySnapshot = await getDocs(q);
 
       let result: any = [];
@@ -124,7 +128,7 @@ const RegisterTopic = () => {
         plan: selectPlan.name,
         planId: selectPlan.id,
         category: values.category,
-        quantity: values.quantity,
+        totalQuantity: values.totalQuantity,
         desc: content,
         auth: userInfo.uid,
         authName: userInfo.fullname,
@@ -248,7 +252,7 @@ const RegisterTopic = () => {
             <Label>Số lượng sinh viên</Label>
             <Input
               type="number"
-              name="quantity"
+              name="totalQuantity"
               min={1}
               control={control}
             ></Input>{" "}

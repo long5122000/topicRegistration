@@ -96,9 +96,7 @@ const LecturersAddNew = () => {
         role: "2",
         createdAt: serverTimestamp(),
       });
-      toast.success(
-        `Create new user with email: ${values.email} successfully!`
-      );
+      toast.success(`Tạo mới người dùng: ${values.email} thành công!`);
       reset({
         fullname: "",
         mgv: "",
@@ -117,7 +115,7 @@ const LecturersAddNew = () => {
       if (error.code == "auth/email-already-in-use") {
         toast.error("Địa chỉ email này đã được sử dụng");
       } else {
-        toast.error("Can not create new user");
+        toast.error("Không thể tạo mới người dùng");
       }
     }
   };

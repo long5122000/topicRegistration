@@ -28,7 +28,7 @@ const TopicView = () => {
   } = useForm({
     mode: "onChange",
   });
-  const watchStatus = watch("status");
+  const watchCategory = watch("category");
   useEffect(() => {
     async function fetchData() {
       if (!topicId) return;
@@ -64,7 +64,7 @@ const TopicView = () => {
             <div className="flex flex-wrap gap-x-5">
               <Radio
                 name="category"
-                checked={watchStatus === "1"}
+                checked={watchCategory === "1"}
                 control={control}
                 value={"1"}
               >
@@ -72,7 +72,7 @@ const TopicView = () => {
               </Radio>
               <Radio
                 name="category"
-                checked={watchStatus === "2"}
+                checked={watchCategory === "2"}
                 control={control}
                 value={"2"}
               >
@@ -102,7 +102,7 @@ const TopicView = () => {
             <Input
               disabled
               type="number"
-              name="quantity"
+              name="totalQuantity"
               min={1}
               control={control}
             ></Input>{" "}

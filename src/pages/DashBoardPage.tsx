@@ -75,7 +75,11 @@ const DashBoardPage = () => {
   useEffect(() => {
     async function getData() {
       const colRef = collection(db, "Users");
-      const q = query(colRef, where("role", "==", "2"));
+      const q = query(
+        colRef,
+        where("role", "==", "2"),
+        where("status", "==", "1")
+      );
       const querySnapshot = await getDocs(q);
       let result: any = [];
       querySnapshot.forEach((doc) => {
@@ -94,7 +98,11 @@ const DashBoardPage = () => {
   useEffect(() => {
     async function getData() {
       const colRef = collection(db, "Users");
-      const q = query(colRef, where("role", "==", "1"));
+      const q = query(
+        colRef,
+        where("role", "==", "1"),
+        where("status", "==", "1")
+      );
       const querySnapshot = await getDocs(q);
       let result: any = [];
       querySnapshot.forEach((doc) => {
@@ -162,7 +170,7 @@ const DashBoardPage = () => {
     datasets: [
       {
         label: "",
-        data: [doneBaseOpinionStudent, noBaseOpinionStudent],
+        data: [doneInternShipAssessment, noInternShipAssessment],
         backgroundColor: ["rgba(54, 162, 235, 0.6)", "rgba(202, 16, 57, 0.6)"],
         borderColor: ["rgba(54, 162, 235, 1)", "#b02f4b"],
         borderWidth: 1,
@@ -174,7 +182,7 @@ const DashBoardPage = () => {
     datasets: [
       {
         label: "",
-        data: [doneBaseOpinionStudent, noBaseOpinionStudent],
+        data: [donebaseconfirmationImage, nobaseconfirmationImage],
         backgroundColor: ["rgba(54, 162, 235, 0.6)", "rgba(202, 16, 57, 0.6)"],
         borderColor: ["rgba(54, 162, 235, 1)", "#b02f4b"],
         borderWidth: 1,
@@ -186,7 +194,7 @@ const DashBoardPage = () => {
     datasets: [
       {
         label: "",
-        data: [doneBaseOpinionStudent, noBaseOpinionStudent],
+        data: [doneinternshipReportFile, nointernshipReportFile],
         backgroundColor: ["rgba(54, 162, 235, 0.6)", "rgba(202, 16, 57, 0.6)"],
         borderColor: ["rgba(54, 162, 235, 1)", "#b02f4b"],
         borderWidth: 1,
@@ -198,7 +206,7 @@ const DashBoardPage = () => {
     datasets: [
       {
         label: "",
-        data: [doneBaseOpinionStudent, noBaseOpinionStudent],
+        data: [doneinternshipOutLineFile, nointernshipOutLineFile],
         backgroundColor: ["rgba(54, 162, 235, 0.6)", "rgba(202, 16, 57, 0.6)"],
         borderColor: ["rgba(54, 162, 235, 1)", "#b02f4b"],
         borderWidth: 1,

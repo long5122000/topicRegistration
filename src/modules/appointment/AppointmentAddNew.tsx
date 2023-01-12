@@ -32,12 +32,9 @@ const AppointmentAddNew = () => {
       name: "",
       desc: "",
       status: false,
-      startDate: new Date(),
-      endDate: new Date(),
     },
   });
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+
   const [content, setContent] = React.useState("");
   const modules = useMemo(
     () => ({
@@ -56,8 +53,6 @@ const AppointmentAddNew = () => {
   interface values {
     name?: string;
     desc?: string;
-    startDate: Date;
-    endDate: Date;
     status: boolean;
   }
   const handleCreateAppointment = async (values: values): Promise<void> => {
@@ -69,19 +64,14 @@ const AppointmentAddNew = () => {
       await addDoc(colRef, {
         name: values.name,
         desc: content,
-        startDate: startDate,
-        endDate: endDate,
         status: values.status,
-        emailLectured: userInfo.email,
         createdAt: new Date(),
       });
-      toast.success(`Tạo cuộc hẹn mới thành công`);
+      toast.success(`Tạo tin tức mới thành công`);
       reset({
         name: "",
         desc: "",
         status: false,
-        startDate: new Date(),
-        endDate: new Date(),
       });
     } catch (error: any) {
       toast.error(error.message);
@@ -93,40 +83,13 @@ const AppointmentAddNew = () => {
       <form onSubmit={handleSubmit(handleCreateAppointment)}>
         <div className="form-layout container">
           <Field>
-            <Label>Tên cuộc hẹn</Label>
+            <Label>Tên tin tức</Label>
             <Input
               name="name"
-              placeholder="Nhập tên cuộc hẹn"
+              placeholder="Nhập tên tin tức"
               control={control}
             ></Input>
             <p className="text-[#de3131] text-sm">{errors.name?.message}</p>
-          </Field>
-          <Field>
-            <Label>Thời gian</Label>
-            <div className="flex gap-x-5">
-              {" "}
-              <DatePicker
-                selected={startDate}
-                onChange={(date) => setStartDate(date)}
-                selectsStart
-                startDate={startDate}
-                endDate={endDate}
-                minDate={startDate}
-                dateFormat="dd/MM/yyyy h:mm aa"
-                showTimeInput
-              />
-              _
-              <DatePicker
-                selected={endDate}
-                onChange={(date) => setEndDate(date)}
-                selectsEnd
-                startDate={startDate}
-                endDate={endDate}
-                minDate={startDate}
-                dateFormat="dd/MM/yyyy h:mm aa"
-                showTimeInput
-              />
-            </div>
           </Field>
         </div>
         <div className="form-layout container mt-5">
@@ -161,7 +124,7 @@ const AppointmentAddNew = () => {
           isLoading={isSubmitting}
           disabled={isSubmitting}
         >
-          Thêm cuộc hẹn
+          Thêm tin tức
         </Button>
       </form>
     </div>

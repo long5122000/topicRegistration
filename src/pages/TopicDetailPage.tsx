@@ -77,7 +77,8 @@ const TopicDetailPage = () => {
         class: userInfo.class,
         authEmail: data.authEmail,
         status: "1",
-        quantity: data.quantity,
+        quantity: 1,
+        totalQuantity: data.totalQuantity,
         cv: userInfo.cv,
         category: userInfo.category,
         topicName: data.name,
@@ -88,6 +89,7 @@ const TopicDetailPage = () => {
         nameLecturer: data.authName,
         namePlan: data.plan,
         nameSection: data.authSection,
+        mgv: data.mgv,
       });
       toast.success(`Đã gửi đăng đăng ký đề tài:  ${data.name} successfully!`);
     } catch (error) {
@@ -110,7 +112,7 @@ const TopicDetailPage = () => {
         </div>
         <div className="flex  gap-x-5 border-b-2 border-gray-400  py-3">
           <h3 className="text-xl">Trạng thái:</h3>
-          {data.quantity <= 0 ? (
+          {data.totalQuantity <= 0 ? (
             <p className="text-xl">Đã hết</p>
           ) : (
             <p className="text-xl">Hiện còn</p>
@@ -118,15 +120,16 @@ const TopicDetailPage = () => {
         </div>
         <div className="flex  gap-x-5 border-b-2 border-gray-400 py-3">
           <h3 className="text-xl">Số lượng sinh viên:</h3>
-          <p className="text-xl">{data.quantity}</p>
+          <p className="text-xl">{data.totalQuantity}</p>
         </div>
         <div className="  gap-x-5 border-b-2 border-gray-400 py-3">
           <h3 className="text-xl">Mô tả:</h3>
           <p className="text-xl">{parse(data?.desc || "")}</p>
         </div>
         <div className="flex justify-center pt-14">
-          {data.quantity > 0 &&
+          {data.totalQuantity > 0 &&
           data?.category === userInfo?.category &&
+          userInfo.status === "1" &&
           !userInfo.topicId ? (
             <Button
               kind="primary"

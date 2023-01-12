@@ -3,6 +3,7 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  onSnapshot,
   query,
   where,
 } from "firebase/firestore";
@@ -23,23 +24,21 @@ const ProposedTopic = () => {
 
   const [topicList, setTopicList] = useState([]);
   const navigate = useNavigate();
+
   useEffect(() => {
-    async function getTopicData() {
-      const colRef = collection(db, "Topics");
-      const q = query(colRef, where("auth", "==", userInfo.uid));
-      const querySnapshot = await getDocs(q);
-      let result: any = [];
-      querySnapshot.forEach((doc) => {
+    const colRef = collection(db, "Topics");
+    const q = query(colRef, where("auth", "==", userInfo.uid));
+    onSnapshot(q, (snapshot) => {
+      const result: any = [];
+      snapshot.forEach((doc) => {
         result.push({
           id: doc.id,
           ...doc.data(),
         });
       });
       setTopicList(result);
-    }
-    getTopicData();
+    });
   }, [userInfo]);
-
   const renderUserStatus = (status: any) => {
     switch (status) {
       case "1":
