@@ -87,7 +87,7 @@ const BaseConfirmationList = () => {
     }).then(async (result: any) => {
       if (result.isConfirmed) {
         await deleteDoc(colRef);
-        toast.success("Xóa cuộc hẹn thành công");
+        toast.success("Xóa cuộc hẹn thành công ");
         Swal.fire("Deleted!", "Your file has been deleted.", "success");
       }
     });
